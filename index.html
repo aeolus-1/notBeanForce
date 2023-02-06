@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gane screen</title>
+</head>
+<body>
+    <button id="host">Host Game</button><br>
+    <button id="join">Join Game</button>
+    <script>
+        document.getElementById("host").onclick = function(){
+            window.open(`./gane.html?host`)
+        }
+        document.getElementById("join").onclick = function(){
+            var id = prompt("Game Id?")
+            window.open(`./gane.html?join=${id}`)
+        }
+    </script>
+</body>
+</html>

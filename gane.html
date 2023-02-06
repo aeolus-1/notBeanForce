@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>drawer</title>
+    <script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
+    <script src="libs/matter.js"></script>
+    <script src="libs/decomp.js"></script>
+    <script src="libs/common.js"></script>
+    <script src="libs/resurrect.js"></script>
+    <style>
+      body {
+        margin: 0%;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="matterInit.js"></script>
+    <img src="m16.png" id="gun">
+    <script>
+
+    setInterval(() => {
+        player.update(keys, prekeys)
+        if (host) {
+          window.enemeyPlayer.update(window.enemeyKeys,{})
+        }
+        Engine.update(engine, Math.min((new Date()).getTime()-preTimeDelta, 50))
+        particleController.runParticles()
+        preTimeDelta = (new Date()).getTime()
+        runBullets()
+        prekeys = {...keys}
+
+    }, 1000/60);
+
+function addBody(bod) {
+            Matter.Composite.add(engine.world, bod)
+            return bod
+        }
+
+        
+        var keys = {shift:false},
+            prekeys = {shift:false}
+        document.addEventListener("keydown", (e)=>{
+            keys[e.key.toLowerCase()] = true
+        })
+        document.addEventListener("keyup", (e)=>{
+            keys[e.key.toLowerCase()] = false
+        })
+        
+    </script>
+    <script src="camera.js"></script>
+    <script src="playerController.js"></script>
+    <script src="particles.js"></script>
+    <script src="multiplayer.js"></script>
+
+<script>
+    const particleController = new ParticleController(engine)
+    var player = new PlayerController(engine,{
+        body:{
+            scale:15,
+            density:0.01,
+        },
+
+        speed:0.6,
+
+        keys:keys,
+        preKeys:prekeys,
+    })
+
+   
+
+    Matter.Composite.allBodies(engine.world).forEach(b=>{if(b.platform){b.collisionFilter.group = 45678903;b.render.fillStyle = "#eee"}})
+    
+
+
+    
+</script>
+
+  </body>
+</html>
