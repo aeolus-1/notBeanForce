@@ -6,7 +6,8 @@ var conn = null;
 
 var status = location.href.split("?")[1],
     host = status.includes("host"),
-    joining = (status.includes("join"))?status.split("=")[1]:false
+    joining = (status.includes("join"))?status.split("=")[1]:false,
+    online = false
 
 
 function initialize() {
@@ -32,6 +33,7 @@ function initialize() {
   });
   peer.on("connection", function (c) {
     // Allow only a single connection
+    online = true
     if (conn && conn.open) {
       c.on("open", function () {
         c.send("Already connected to another client");
@@ -48,7 +50,7 @@ function initialize() {
   });
   peer.on("disconnected", function () {
     console.log("Connection lost. Please reconnect");
-
+    online = false
     // Workaround for peer.reconnect deleting previous id
     peer.id = lastPeerId;
     peer._lastServerId = lastPeerId;
@@ -122,6 +124,13 @@ function getMultiplayerData() {
         keys:keys,
     })
 }
+function getClientData() {
+  return JSON.stringify({
+      position:player.body.position,
+      velocity:player.body.velocity,
+      keys:keys,
+  })
+}
 
 function mulitPlayerInit() {
     initialize()
@@ -130,7 +139,7 @@ function mulitPlayerInit() {
     Matter.Composite.add(engine.world, multiPlayerBodies)
     
 
-    if (host) {
+    if (host || joining) {
         window.enemeyPlayer = new PlayerController(engine,{
             body:{
                 scale:15,

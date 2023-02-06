@@ -23,7 +23,7 @@
 
     setInterval(() => {
         player.update(keys, prekeys)
-        if (host) {
+        if ((host || joining)&&online) {
           window.enemeyPlayer.update(window.enemeyKeys,{})
         }
         Engine.update(engine, Math.min((new Date()).getTime()-preTimeDelta, 50))
