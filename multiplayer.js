@@ -130,6 +130,7 @@ function getMultiplayerData() {
         position:player.body.position,
         velocity:player.body.velocity,
         keys:keys,
+        alive:player.alive,
     })
 }
 function getClientData() {
@@ -137,6 +138,7 @@ function getClientData() {
       position:player.body.position,
       velocity:player.body.velocity,
       keys:keys,
+      alive:player.alive,
   })
 }
 
@@ -164,10 +166,11 @@ function mulitPlayerInit() {
 
 function receiveMultiplayerData(data) {
     data = JSON.parse(data)
-    console.log(window.enemeyPlayer, data)
     Matter.Body.setPosition(window.enemeyPlayer.body, data.position)
     Matter.Body.setVelocity(window.enemeyPlayer.body, data.velocity)
     window.enemeyKeys = data.keys
+    //window.enemeyPlayer.alive = data.alive
+    if (!data.alive) window.enemeyPlayer.kill(false)
 }
 
 function multiplayerClientLoop() {

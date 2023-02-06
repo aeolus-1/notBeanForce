@@ -22,6 +22,9 @@
     <script>
 var enemeyPreKeys = {}
     setInterval(() => {
+      if (keys["enter"]&&!player.alive) {
+        respawn()
+      }
         player.update(keys, prekeys)
         if ((host || joining)&&online) {
           window.enemeyPlayer.update(window.enemeyKeys,enemeyPreKeys)
@@ -75,7 +78,13 @@ function addBody(bod) {
     Matter.Composite.allBodies(engine.world).forEach(b=>{if(b.platform){b.collisionFilter.group = 45678903;b.render.fillStyle = "#eee"}})
     
 
-
+    function respawn() {
+      player.options.speed = 0.6
+      player.options.jumpHeight = 1
+      player.alive = true
+      player.stabilsing = true
+      Matter.Body.setPosition(player.body,v(100,0))
+    }
     
 </script>
 

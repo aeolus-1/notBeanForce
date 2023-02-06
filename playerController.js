@@ -60,7 +60,7 @@ class PlayerController {
 
         Matter.Composite.add(playersComp,this.body)
         
-        console.log(this.body)
+        this.alive = true
         this.engine.players = this.engine.players||[]
         this.engine.players.push(this)
     
@@ -333,27 +333,31 @@ class PlayerController {
         Matter.Body.setAngle(this.body, oldAngle)    }
 
 
-    kill() {
+    kill(part=false) {
         this.stabilsing = false
         this.options.speed = 0
         this.options.jumpHeight = 0
-        particleController.createSquareExplosion(
-            this.body.position,
-            {
-                amount:20,
-                yMin:-3,
-                yMax:3,
-                xMax:3,
-                xMin:-3,
-                
-            },
-            {
-                halfLife:20,
-                render:{
-                    fillStyle:"rgb(119,106,35)"
+        this.alive = false
+        if (part) {
+            particleController.createSquareExplosion(
+                this.body.position,
+                {
+                    amount:20,
+                    yMin:-3,
+                    yMax:3,
+                    xMax:3,
+                    xMin:-3,
+                    
+                },
+                {
+                    halfLife:20,
+                    render:{
+                        fillStyle:"rgb(119,106,35)"
+                    }
                 }
-            }
-        )
+            )
+            
+        }
     }
 
     shoot() {
@@ -371,8 +375,8 @@ function runBullets() {
         var hits = Matter.Query.collides(bul, [...engine.world.bodies,...playersComp.bodies])//.filter(a=>{return a.bodyB.id!=bul.id})
         console.log(hits[0])
         if (hits.length>0) {
-            Matter.Composite.remove(bulletsComp, bul)
-            bullets.splice(i, 1)
+            //Matter.Composite.remove(bulletsComp, bul)
+            //bullets.splice(i, 1)
 
             if (hits[0].bodyB.id == player.body.id) {
                 player.kill()
