@@ -368,12 +368,14 @@ function runBullets() {
     for (let i = 0; i < bullets.length; i++) {
         const bul = bullets[i];
 
-        var hits = Matter.Query.collides(bul, engine.world.bodies).filter(a=>{return a.bodyA.id==bul.id&&a.bodyB.id!=bul.id})
+        var hits = Matter.Query.collides(bul, [...engine.world.bodies,...playersComp.bodies])//.filter(a=>{return a.bodyB.id!=bul.id})
+        console.log(hits[0])
         if (hits.length>0) {
-            //console.log(hits[0].bodyB.id,hits[0].bodyA.id,player.body.id)
+            Matter.Composite.remove(bulletsComp, bul)
+            bullets.splice(i, 1)
+
             if (hits[0].bodyB.id == player.body.id) {
                 player.kill()
-                bul.position.x = 6789
             }
             //
 

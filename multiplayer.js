@@ -46,6 +46,8 @@ function initialize() {
 
     conn = c;
     console.log("Connected to: " + conn.peer);
+    setInterval(()=>{multiplayerClientLoop()},25)
+
     ready();
   });
   peer.on("disconnected", function () {
@@ -88,6 +90,9 @@ function join(id) {
 
   conn.on("open", function () {
     console.log("Connected to: " + conn.peer);
+    online = true
+
+    setInterval(()=>{multiplayerClientLoop()},25)
 
     // Check URL params for comamnds that should be sent immediately
     var command = getUrlParam("command");
@@ -98,7 +103,10 @@ function join(id) {
     //console.log("data", data);
     receiveMultiplayerData(data)
   });
-  conn.on("close", function () {});
+  conn.on("close", function () {
+    online = false
+
+  });
 }
 
 function getUrlParam(name) {

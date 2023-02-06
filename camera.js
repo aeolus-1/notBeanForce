@@ -27,13 +27,13 @@ Matter.Events.on(render, "beforeRender", function () {
   targetPos = v(
     clamp(
       player.body.position.x,
-      clampedCameraBounds.min.x + (render.canvas.width / 4)*scale,
-      clampedCameraBounds.max.x - (render.canvas.width / 4)*scale
+      clampedCameraBounds.min.x + (render.canvas.width / 4) * scale,
+      clampedCameraBounds.max.x - (render.canvas.width / 4) * scale
     ),
     clamp(
       player.body.position.y,
-      clampedCameraBounds.min.y + (render.canvas.height / 4)*scale,
-      clampedCameraBounds.max.y - (render.canvas.height / 4)*scale
+      clampedCameraBounds.min.y + (render.canvas.height / 4) * scale,
+      clampedCameraBounds.max.y - (render.canvas.height / 4) * scale
     )
   );
 
@@ -46,13 +46,13 @@ Matter.Events.on(render, "beforeRender", function () {
   camera = v(
     clamp(
       camera.x,
-      clampedCameraBounds.min.x + (render.canvas.width / 4)*scale,
-      clampedCameraBounds.max.x - (render.canvas.width / 4)*scale
+      clampedCameraBounds.min.x + (render.canvas.width / 4) * scale,
+      clampedCameraBounds.max.x - (render.canvas.width / 4) * scale
     ),
     clamp(
       camera.y,
-      clampedCameraBounds.min.y + (render.canvas.height / 4)*scale,
-      clampedCameraBounds.max.y - (render.canvas.height / 4)*scale
+      clampedCameraBounds.min.y + (render.canvas.height / 4) * scale,
+      clampedCameraBounds.max.y - (render.canvas.height / 4) * scale
     )
   );
 
@@ -75,11 +75,11 @@ Matter.Events.on(render, "afterRender", function () {
   var height = (img.height / img.width) * width,
     direction = Math.sign(player.body.velocity.x);
   ctx.save();
-  ctx.translate(player.body.position.x, player.body.position.x + height / 2);
+  ctx.translate(player.body.position.x, player.body.position.y + height / 2);
   ctx.scale(1 * direction, 1);
   ctx.translate(
     -player.body.position.x,
-    -(player.body.position.x + height / 2)
+    -(player.body.position.y + height / 2)
   );
   ctx.drawImage(
     img,
@@ -88,7 +88,23 @@ Matter.Events.on(render, "afterRender", function () {
     width,
     height
   );
+
   ctx.restore();
+  if (window.enemeyPlayer != undefined) {
+    direction = Math.sign(window.enemeyPlayer.body.velocity.x);
+
+    ctx.save();
+    
+    ctx.drawImage(
+      img,
+      window.enemeyPlayer.body.position.x,
+      window.enemeyPlayer.body.position.y,
+      width,
+      height
+    );
+
+    ctx.restore();
+  }
 
   //render.context.fillRect(player.body.position.x, player.body.position.y, 100,100)
 });
