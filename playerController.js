@@ -299,7 +299,7 @@ class PlayerController {
                             
                         },
                         {
-                            halfLife:4,
+                            halfLife:2.5,
                             ignoreGravity:true,
                             render:{
                                 fillStyle:"#000"
@@ -375,11 +375,30 @@ function runBullets() {
         var hits = Matter.Query.collides(bul, [...engine.world.bodies,...playersComp.bodies])//.filter(a=>{return a.bodyB.id!=bul.id})
         console.log(hits[0])
         if (hits.length>0) {
-            //Matter.Composite.remove(bulletsComp, bul)
-            //bullets.splice(i, 1)
+            Matter.Composite.remove(bulletsComp, bul)
+            bullets.splice(i, 1)
+            
 
             if (hits[0].bodyB.id == player.body.id) {
                 player.kill()
+            } else {
+                particleController.createSquareExplosion(
+                    bul.position,
+                    {
+                        amount:4,
+                        yMin:-3,
+                        yMax:3,
+                        xMax:3,
+                        xMin:-3,
+                        
+                    },
+                    {
+                        halfLife:15,
+                        render:{
+                            fillStyle:"#000"
+                        }
+                    }
+                )
             }
             //
 
