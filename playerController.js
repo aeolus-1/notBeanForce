@@ -16,6 +16,9 @@ class PlayerController {
             speed:1,
             keys:{},
             preKeys:{},
+            id:Math.floor(Math.random()*10e+10),
+
+            
 
             ...options,
         }
@@ -53,9 +56,10 @@ class PlayerController {
         })()
 
         this.body = Matter.Bodies.fromVertices(870+randInt(-50,50),2000, verts, {
-            id:Math.floor(Math.random()*10e+10),
+            id:options.id,
             density:options.body.density,
             frictionAir:0.02,
+            controller:this,
         })
 
         Matter.Composite.add(playersComp,this.body)
@@ -78,13 +82,11 @@ class PlayerController {
 
         this.stabilsing = true
     }
-    update(keys, prekeys){
+    update(keys=this.keys, prekeys=this.preKeys){
         this.jumpTicker += this.engine.timing.lastElapsed
         this.droppingPlatform -= this.engine.timing.lastElapsed
         this.falling += this.engine.timing.lastElapsed
-        this.keys = keys
         this.updateControls(keys, prekeys)
-        console.log(this.body.position.y)
         if (this.body.position.y > 2500) {
             this.kill()
             respawn()

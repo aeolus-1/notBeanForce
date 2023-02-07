@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>drawer</title>
-    <script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
+    <script src="libs/peer.js"></script>
     <script src="libs/matter.js"></script>
     <script src="libs/decomp.js"></script>
     <script src="libs/common.js"></script>
@@ -26,10 +26,11 @@ var enemeyPreKeys = {}
         respawn()
       }
         player.update(keys, prekeys)
-        if ((host || joining)&&online) {
-          window.enemeyPlayer.update(window.enemeyKeys,enemeyPreKeys)
-          if (window.enemeyPlayer.alive) {
-            window.enemeyPlayer.stabilsing = true
+        
+        if (host&&online) {
+          for (let i = 0; i < enemeyPlayers.length; i++) {
+            const player = enemeyPlayers[i];
+            player.update()
           }
         }
         enemeyPreKeys = {...window.enemeyKeys}
