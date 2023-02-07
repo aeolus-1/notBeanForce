@@ -28,6 +28,9 @@ var enemeyPreKeys = {}
         player.update(keys, prekeys)
         if ((host || joining)&&online) {
           window.enemeyPlayer.update(window.enemeyKeys,enemeyPreKeys)
+          if (window.enemeyPlayer.alive) {
+            window.enemeyPlayer.stabilsing = true
+          }
         }
         enemeyPreKeys = {...window.enemeyKeys}
         Engine.update(engine, Math.min((new Date()).getTime()-preTimeDelta, 50))
