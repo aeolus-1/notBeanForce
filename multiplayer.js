@@ -171,7 +171,7 @@ function receiveMultiplayerData(data) {
     Matter.Body.setPosition(window.enemeyPlayer.body, data.position)
     Matter.Body.setVelocity(window.enemeyPlayer.body, data.velocity)
     window.enemeyKeys = data.keys
-    //window.enemeyPlayer.alive = data.alive
+    window.enemeyPlayer.alive = data.alive
     if (!data.alive) window.enemeyPlayer.kill(false)
 }
 
