@@ -373,7 +373,6 @@ function runBullets() {
         const bul = bullets[i];
 
         var hits = Matter.Query.collides(bul, [...engine.world.bodies,...playersComp.bodies])//.filter(a=>{return a.bodyB.id!=bul.id})
-        console.log(hits[0])
         if (hits.length>0) {
             Matter.Composite.remove(bulletsComp, bul)
             bullets.splice(i, 1)
