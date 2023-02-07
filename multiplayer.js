@@ -26,6 +26,7 @@ function initialize() {
     }
 
     console.log("ID: ", peer.id);
+    document.getElementById("idDiv").textContent = peer.id
     console.log("Awaiting connection...");
     if (joining) {
         join(joining)
@@ -34,6 +35,7 @@ function initialize() {
   peer.on("connection", function (c) {
     // Allow only a single connection
     online = true
+    document.getElementById("idDiv").textContent = "connected"
     if (conn && conn.open) {
       c.on("open", function () {
         c.send("Already connected to another client");
