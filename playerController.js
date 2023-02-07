@@ -84,7 +84,11 @@ class PlayerController {
         this.falling += this.engine.timing.lastElapsed
         this.keys = keys
         this.updateControls(keys, prekeys)
-        
+        console.log(this.body.position.y)
+        if (this.body.position.y > 2500) {
+            this.kill()
+            respawn()
+        }
 
         
         if (this.stabilsing) {
@@ -231,7 +235,6 @@ class PlayerController {
                     this.droppingPlatform = 5
     
                     this.endCollisionCheck = ()=>{
-                        console.log('end')
                         var i = this.body.collisionFilter.cannotCollideWith.indexOf(floor.collisionFilter.group)
                         if (i>=0) this.body.collisionFilter.cannotCollideWith.splice(i,1)
                     }
