@@ -34,7 +34,7 @@ class Connection {
       }
 
       console.log("ID: ", this.id);
-      if (host && this.connection.hostId==undefined) document.getElementById("idDiv").innerHTML += `<br>${this.id}`
+      if (host && this.connection.hostId==undefined) document.getElementById("idDiv").innerHTML += `<br><a target="_blank" href="https://aeolus-1.github.io/earlySSBGameIDK/gane.html?join=${this.id}">${this.id}</a>`
 
       console.log("Awaiting connection...");
       console.log(this.joining)
@@ -71,7 +71,7 @@ class Connection {
       this.connection.conn.connection = this.connection;
       if (host) {
         console.log(this.id)
-        document.getElementById("idDiv").innerHTML = document.getElementById("idDiv").innerHTML.replace(this.id,this.id+" - Connected")
+        document.getElementById("idDiv").innerHTML = document.getElementById("idDiv").innerHTML.replace(this.id+"</a>",this.id+"</a> - Connected")
       }
 
       console.log("Connected to: " + this.connection.conn.peer);
