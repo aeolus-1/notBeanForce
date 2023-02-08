@@ -90,21 +90,28 @@ Matter.Events.on(render, "afterRender", function () {
   );
 
   ctx.restore();
-  if (window.enemeyPlayer != undefined) {
-    direction = Math.sign(window.enemeyPlayer.body.velocity.x);
+    for (let i = 0; i < enemeyPlayers.length; i++) {
+      const enPlayer = enemeyPlayers[i];
+      direction = Math.sign(enPlayer.body.velocity.x);
 
     ctx.save();
+    ctx.translate(enPlayer.body.position.x,enPlayer.body.position.y)
+    ctx.scale(direction, 1)
+    ctx.translate(-enPlayer.body.position.x,-enPlayer.body.position.y)
+
     
     ctx.drawImage(
       img,
-      window.enemeyPlayer.body.position.x,
-      window.enemeyPlayer.body.position.y,
+      enPlayer.body.position.x,
+      enPlayer.body.position.y,
       width,
       height
     );
 
     ctx.restore();
-  }
+    }
+  
+
 
   //render.context.fillRect(player.body.position.x, player.body.position.y, 100,100)
 });
