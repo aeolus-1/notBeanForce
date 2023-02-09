@@ -161,6 +161,7 @@ class ClientConnection extends Connection {
       velocity: player.body.velocity,
       keys: keys,
       alive: player.alive,
+      bleeding:player.bleeding,
     });
   }
 
@@ -250,7 +251,7 @@ function receiveMultiplayerData(data) {
       enemeyPlayer.controller.stabilsing = data.stabilsing||true
       enemeyPlayer.controller.ducking = data.ducking
       console.log(data.ducking)
-      enemeyPlayer.controller.bleeding = data.bleeding||false
+      enemeyPlayer.controller.bleeding = data.bleeding
 
       if (!data.alive) enemeyPlayer.controller.kill(false);
     }
@@ -305,6 +306,7 @@ function getMultiplayerData() {
         id: player.body.id,
         ducking:player.isDucking,
         stabilsing:player.stabilsing,
+        bleeding:player.bleeding,
       }
     )
   }

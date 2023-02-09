@@ -39,6 +39,8 @@ var enemeyPreKeys = {}
             //conn.sendClientDataBack()
           }
         }
+        player.bleeding = player.stats.health <= 0.4
+        
         updateClients()
         if (window.clientConnection!=undefined) if (joining!=undefined) {
           console.log(window.clientConnection.conn._open)

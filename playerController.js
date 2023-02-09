@@ -117,7 +117,7 @@ class PlayerController {
         }
         this.preDucking = this.ducking
 
-        if (this.stats.health <= 0.4 && (new Date()).getTime()%6>3) {
+        if (this.bleeding) {
             particleController.spawnParticle(v(
                 this.body.position.x+((randInt(-100,100)/100)*20),
                 this.body.position.y+(Math.abs(this.body.bounds.min.y-this.body.bounds.max.y)*0.35)+((randInt(-100,100)/100)*20)
