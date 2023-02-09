@@ -1,7 +1,13 @@
 var status = location.href.split("?")[1],
   host = status.includes("host"),
   joining = status.includes("join") ? status.split("=")[1] : false,
-  online = false;
+  online = false,
+
+  username = location.href.split("?")[2]
+  if (username != undefined) {username = username.split("=")[1]} else {username = prompt("Username?")}
+
+
+
 
 class Connection {
   constructor(joining=undefined) {
@@ -161,7 +167,11 @@ class ClientConnection extends Connection {
       velocity: player.body.velocity,
       keys: keys,
       alive: player.alive,
+      id: player.body.id,
+      stabilsing: player.stabilsing,
+      ducking:player.isDucking,
       bleeding:player.bleeding,
+      username:player.username,
     });
   }
 
@@ -175,6 +185,7 @@ class ClientConnection extends Connection {
       stabilsing: player.stabilsing,
       ducking:player.isDucking,
       bleeding:player.bleeding,
+      username:player.username,
     });
   }
 
@@ -250,8 +261,10 @@ function receiveMultiplayerData(data) {
       enemeyPlayer.controller.keys = data.keys
       enemeyPlayer.controller.stabilsing = data.stabilsing||true
       enemeyPlayer.controller.ducking = data.ducking
-      console.log(data.ducking)
       enemeyPlayer.controller.bleeding = data.bleeding
+
+      console.log(data.username)
+      enemeyPlayer.controller.username = data.username
 
       if (!data.alive) enemeyPlayer.controller.kill(false);
     }
@@ -307,6 +320,7 @@ function getMultiplayerData() {
         ducking:player.isDucking,
         stabilsing:player.stabilsing,
         bleeding:player.bleeding,
+        username:player.username,
       }
     )
   }

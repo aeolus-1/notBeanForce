@@ -120,6 +120,15 @@ Matter.Events.on(render, "afterRender", function () {
   
 
   ctx.restore();
+  var fontSize = 30
+  ctx.font = `${fontSize}px Comic Sans MS`
+    var width = ctx.measureText(player.username).width/2
+
+  ctx.fillStyle = "#000"
+  ctx.fillText(player.username, 
+    player.body.position.x-width,
+    player.body.position.y-100,
+  )
   renderHealthBar(v(
     player.body.position.x,
     player.body.position.y-40
@@ -141,8 +150,17 @@ Matter.Events.on(render, "afterRender", function () {
       width,
       height
     );
+ctx.restore()
+    var fontSize = 30
+  ctx.font = `${fontSize}px Comic Sans MS`
+    var width = ctx.measureText(enPlayer.username).width/2
 
-    ctx.restore();
+  ctx.fillStyle = "#000"
+  ctx.fillText(enPlayer.username, 
+    enPlayer.body.position.x-width,
+    enPlayer.body.position.y-100,
+  )
+
     }
 
     renderLog(ctx)

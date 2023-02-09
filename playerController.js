@@ -18,7 +18,7 @@ class PlayerController {
             preKeys:{},
             id:Math.floor(Math.random()*10e+10),
 
-            name:"unnamed",
+            username:"unnamed",
 
             
 
@@ -26,7 +26,7 @@ class PlayerController {
         }
         this.options = options
 
-        this.name = options.name
+        this.username = options.username
 
         this.keys = this.options.keys
         this.preKeys = this.options.preKeys

@@ -13,8 +13,9 @@
             window.open(`./gane.html?host`)
         }
         document.getElementById("join").onclick = function(){
-            var id = prompt("Game Id?")
-            window.open(`./gane.html?join=${id}`)
+            var id = prompt("Game Id?"),
+                userName = prompt("Username?")||"unnamed"
+            window.open(`./gane.html?join=${id}?userName=${userName}`)
         }
     </script>
 </body>
