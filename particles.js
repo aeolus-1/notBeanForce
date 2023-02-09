@@ -52,6 +52,7 @@ class ParticleController {
         Matter.Body.setVelocity(partBody,options.velocity)
 
         this.particles.push(partBody)
+        Matter.Body.setAngle(partBody, Math.random()*2*Math.PI)
         Matter.Composite.add(this.particlesComp, partBody)
     }
 

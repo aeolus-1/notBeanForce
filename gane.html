@@ -20,6 +20,8 @@
     <script src="matterInit.js"></script>
     <img src="m16.png" id="gun">
     <script>
+      var spawnPoints = [v(855.8181670104865,1522.0270814533455),v(2247.554572466912,940.9677959175898),v(967.6447812937414,367.2323634734135),v(2307.4936882779007,349.29906655323293),v(3478.786842405824,343.7395804083279),v(3472.383292059527,1143.6681164373022),v(2347.5319305552416,1542.0470304068654),v(2704.750694938356,1990.8464481503904)]
+
 var enemeyPreKeys = {}
     setInterval(() => {
       if (keys["enter"]&&!player.alive) {
@@ -42,6 +44,8 @@ var enemeyPreKeys = {}
           console.log(window.clientConnection.conn._open)
           window.clientConnection.updateHost()
         }
+
+        telepoter.update()
         
         enemeyPreKeys = {...window.enemeyKeys}
         Engine.update(engine, Math.min((new Date()).getTime()-preTimeDelta, 50))
@@ -69,6 +73,9 @@ function addBody(bod) {
         
     </script>
     <script src="camera.js"></script>
+
+    <script src="teleporters.js"></script>
+
     <script src="playerController.js"></script>
     <script src="particles.js"></script>
     <script src="multiplayer.js"></script>
@@ -87,7 +94,7 @@ function addBody(bod) {
         preKeys:prekeys,
     })
 
-   
+    var telepoter = new Teleporter(v(100,100), v(3620,1571))
 
     Matter.Composite.allBodies(engine.world).forEach(b=>{if(b.platform){b.collisionFilter.group = 45678903;b.render.fillStyle = "#eee"}})
     
@@ -97,7 +104,9 @@ function addBody(bod) {
       player.options.jumpHeight = 1
       player.alive = true
       player.stabilsing = true
-      Matter.Body.setPosition(player.body,v(100,0))
+      var point = {...spawnPoints[randInt(0,spawnPoints.length-1)]}
+      console.log(point)
+      Matter.Body.setPosition(player.body,point.x, point.y)
     }
     
 </script>

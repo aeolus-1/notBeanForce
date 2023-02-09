@@ -54,8 +54,10 @@ class PlayerController {
     
             return verts//[...verts, v(-1*scale,2*scale)]
         })()
+        var point = {...spawnPoints[randInt(0,spawnPoints.length-1)]}
+        console.log(point)
 
-        this.body = Matter.Bodies.fromVertices(870+randInt(-50,50),2000, verts, {
+        this.body = Matter.Bodies.fromVertices(point.x+randInt(-10,10),point.y, verts, {
             id:options.id,
             density:options.body.density,
             frictionAir:0.02,
@@ -221,10 +223,10 @@ class PlayerController {
             if (keys.w && !preKeys.w && this.jumps > 0) {
                 this.jumps -= 1
                 this.jumpTicker = 0
-                Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -10*this.options.jumpHeight))
+                Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -8*this.options.jumpHeight))
             }
-            if (!onground && keys.w && this.jumpTicker < 13) {
-                Matter.Body.setVelocity(this.body, v(this.body.velocity.x, this.body.velocity.y-0.5))
+            if (!onground && keys.w && this.jumpTicker < 35 && this.body.velocity.y < 0) {
+                Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -8*this.options.jumpHeight))
             }
     
     
@@ -427,6 +429,8 @@ function addBullet(pos, dir, player) {
     bullet.ignoreGravity = true
     bullet.collisionFilter.group = 67894
     bullet.collisionFilter.cannotCollideWith.push(67894)
+    bullet.collisionFilter.cannotCollideWith.push(6969)
+    
     Matter.Body.setVelocity(bullet, v(
         (dir*20)+(player.body.velocity.x*0.05),
         (player.body.velocity.y*0.05)
