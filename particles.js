@@ -29,6 +29,7 @@ class ParticleController {
             velocity:v(),
             scale:1,
             halfLife:50,
+            noCollisions:false,
             ...options,
         }
         options.halfLife *= (randInt(80,120)/100)
@@ -40,7 +41,7 @@ class ParticleController {
                 v(0.5,0)
             ],
             {...options,
-                collisionFilter:{cannotCollideWith:[...playerGroups]},
+                collisionFilter:{none:options.noCollisions,cannotCollideWith:[...playerGroups,56730]},
                 restitution:1,
             }
         )

@@ -1,5 +1,5 @@
 Matter.Detector.canCollide = function (filterA, filterB) {
-  return !(filterB.cannotCollideWith.includes(filterA.group) || filterA.cannotCollideWith.includes(filterB.group)) /*&& (filterB.group == 0||filterA.group == 0)/*(
+  return !(filterB.cannotCollideWith.includes(filterA.group) || filterA.cannotCollideWith.includes(filterB.group))&&!(filterA.none||filterB.none) /*&& (filterB.group == 0||filterA.group == 0)/*(
     
     (
       filterB.collidesWith.includes(filterA.group)// && !filterB.cannotCollideWith.includes(filterA.group)

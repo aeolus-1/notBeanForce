@@ -94,7 +94,7 @@ function addBody(bod) {
         preKeys:prekeys,
     })
 
-    var telepoter = new Teleporter(v(100,100), v(3620,1571))
+    var telepoter = new Teleporter(v(300,100), v(3700,1471))
 
     Matter.Composite.allBodies(engine.world).forEach(b=>{if(b.platform){b.collisionFilter.group = 45678903;b.render.fillStyle = "#eee"}})
     
@@ -106,7 +106,7 @@ function addBody(bod) {
       player.stabilsing = true
       var point = {...spawnPoints[randInt(0,spawnPoints.length-1)]}
       console.log(point)
-      Matter.Body.setPosition(player.body,point.x, point.y)
+      Matter.Body.setPosition(player.body,point)
     }
     
 </script>

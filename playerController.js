@@ -60,8 +60,10 @@ class PlayerController {
         this.body = Matter.Bodies.fromVertices(point.x+randInt(-10,10),point.y, verts, {
             id:options.id,
             density:options.body.density,
-            frictionAir:0.02,
+            frictionAir:0.01,
             controller:this,
+
+            
         })
 
         Matter.Composite.add(playersComp,this.body)
@@ -225,7 +227,7 @@ class PlayerController {
                 this.jumpTicker = 0
                 Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -8*this.options.jumpHeight))
             }
-            if (!onground && keys.w && this.jumpTicker < 35 && this.body.velocity.y < 0) {
+            if (!onground && keys.w && this.jumpTicker < 20 && this.body.velocity.y < 0) {
                 Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -8*this.options.jumpHeight))
             }
     
@@ -246,7 +248,7 @@ class PlayerController {
             }
     
     
-            var speed = ((onground)?3:0.5)*this.options.speed,
+            var speed = ((onground)?3.5:0.6)*this.options.speed,
                 baseVel = onground?(this.body.velocity.x*0.75):this.body.velocity.x
 
             var runP = (direction) => {
@@ -381,30 +383,32 @@ function runBullets() {
 
         var hits = Matter.Query.collides(bul, [...engine.world.bodies,...playersComp.bodies])//.filter(a=>{return a.bodyB.id!=bul.id})
         if (hits.length>0) {
-            Matter.Composite.remove(bulletsComp, bul)
-            bullets.splice(i, 1)
-            
+            if (!hits[0].bodyA.portal) {
+                Matter.Composite.remove(bulletsComp, bul)
+                bullets.splice(i, 1)
+                
 
-            if (hits[0].bodyB.id == player.body.id) {
-                player.kill()
-            } else {
-                particleController.createSquareExplosion(
-                    bul.position,
-                    {
-                        amount:4,
-                        yMin:-3,
-                        yMax:3,
-                        xMax:3,
-                        xMin:-3,
-                        
-                    },
-                    {
-                        halfLife:15,
-                        render:{
-                            fillStyle:"#000"
+                if (hits[0].bodyB.id == player.body.id) {
+                    player.kill()
+                } else {
+                    particleController.createSquareExplosion(
+                        bul.position,
+                        {
+                            amount:4,
+                            yMin:-3,
+                            yMax:3,
+                            xMax:3,
+                            xMin:-3,
+                            
+                        },
+                        {
+                            halfLife:15,
+                            render:{
+                                fillStyle:"#000"
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
             //
 
@@ -428,8 +432,8 @@ function addBullet(pos, dir, player) {
     })
     bullet.ignoreGravity = true
     bullet.collisionFilter.group = 67894
-    bullet.collisionFilter.cannotCollideWith.push(67894)
-    bullet.collisionFilter.cannotCollideWith.push(6969)
+    bullet.collisionFilter.cannotCollideWith.push(56730)
+    //bullet.collisionFilter.cannotCollideWith.push(56730)
     
     Matter.Body.setVelocity(bullet, v(
         (dir*20)+(player.body.velocity.x*0.05),

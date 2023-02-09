@@ -10,13 +10,20 @@ class Teleporter {
             isStatic:true,
         }
         this.body1 = Matter.Bodies.circle(pos1.x,pos1.y,50,{...options,
-            render:{fillStyle:"#ff5d00"}
+            render:{fillStyle:"#ff5d00"},
+            collisionFilter:{group:56730},
+            portal:true,
         })
         this.body2 = Matter.Bodies.circle(pos2.x,pos2.y,50,{...options,
             render:{fillStyle:"#0065ff"},
+            collisionFilter:{group:56730},
+            portal:true,
         })
         this.body1.endPoint = this.body2
         this.body2.endPoint = this.body1
+
+        this.body1.portal = true
+        this.body2.portal = true
 
         Matter.Body.scale(this.body1, 1, 0.65)
         Matter.Body.scale(this.body2, 1, 0.65)
@@ -42,7 +49,17 @@ class Teleporter {
                 if (this.portalTicker[collision.bodyB.id] < 0) {
                     this.drawParticleLine({...body.position}, {...body.endPoint.position}, body.render.fillStyle,body.endPoint.render.fillStyle)
 
-                    Matter.Body.setPosition(collision.bodyB, body.endPoint.position)
+                    var relativePosition = v(
+                        body.position.x-collision.bodyB.position.x,
+                        body.position.y-collision.bodyB.position.y,
+
+                    )
+
+                    Matter.Body.setPosition(collision.bodyB, v(
+                        body.endPoint.position.x-relativePosition.x,
+                        body.endPoint.position.y+relativePosition.y,
+                        )
+                    )
                     this.portalTicker[collision.bodyB.id] = 80
                 }
             }
@@ -58,13 +75,14 @@ class Teleporter {
             steps = length*0.2
         for (let i = 0; i < 1; i+=1/steps) {
             var newPoint = lerpV(pointA,pointB,i+(Math.random()*0.05)),
-                direction = (getAngle(pointA, pointB)+90+randInt(-5,5))/(180/Math.PI),//+((Math.random()*4)-2),
+                rangeDiff = 8,
+                direction = (-getAngle(pointA, pointB)-90+randInt(-rangeDiff,rangeDiff))/(180/Math.PI),//+((Math.random()*4)-2),
                     velocity = v(
-                        Math.cos(direction),//*Math.random(),
-                        Math.sin(direction)//*Math.random(),
+                        Math.cos(direction)*3,//*Math.random(),
+                        Math.sin(direction)*3//*Math.random(),
                     )
                 
-            particleController.spawnParticle(newPoint,{velocity:velocity,ignoreGravity:true,render:{fillStyle:pSBC(i,fillStyleA,fillStyleB)}})
+            particleController.spawnParticle(newPoint,{velocity:velocity,noCollisions:true,ignoreGravity:true,render:{fillStyle:pSBC(i,fillStyleA,fillStyleB)}})
         }
     }
     updateParticles() {
