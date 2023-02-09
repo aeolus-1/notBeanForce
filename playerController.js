@@ -85,6 +85,10 @@ class PlayerController {
         this.preOnground = false
 
         this.stabilsing = true
+
+        this.stats = {
+            killCount:0,
+        }
     }
     update(keys=this.keys, prekeys=this.preKeys){
         this.jumpTicker += this.engine.timing.lastElapsed
@@ -390,6 +394,7 @@ function runBullets() {
 
                 if (hits[0].bodyB.id == player.body.id) {
                     player.kill()
+                    hits[0].bodyA.owner.stats.killCount += 1
                 } else {
                     particleController.createSquareExplosion(
                         bul.position,
@@ -433,6 +438,7 @@ function addBullet(pos, dir, player) {
     bullet.ignoreGravity = true
     bullet.collisionFilter.group = 67894
     bullet.collisionFilter.cannotCollideWith.push(56730)
+    bullet.owner = player
     //bullet.collisionFilter.cannotCollideWith.push(56730)
     
     Matter.Body.setVelocity(bullet, v(

