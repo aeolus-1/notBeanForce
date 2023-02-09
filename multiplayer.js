@@ -248,7 +248,8 @@ function receiveMultiplayerData(data) {
       enemeyPlayer.controller.preKeys = enemeyPlayer.controller.keys
       enemeyPlayer.controller.keys = data.keys
       enemeyPlayer.controller.stabilsing = data.stabilsing||true
-      enemeyPlayer.controller.isDucking = data.ducking||false
+      enemeyPlayer.controller.ducking = data.ducking
+      console.log(data.ducking)
       enemeyPlayer.controller.bleeding = data.bleeding||false
 
       if (!data.alive) enemeyPlayer.controller.kill(false);
@@ -302,6 +303,8 @@ function getMultiplayerData() {
         keys: player.keys,
         alive: player.alive,
         id: player.body.id,
+        ducking:player.isDucking,
+        stabilsing:player.stabilsing,
       }
     )
   }

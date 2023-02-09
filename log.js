@@ -6,12 +6,12 @@ function renderLog(ctx) {
         const msg = log[i];
         var fontSize = 40
         ctx.font = `${fontSize}px Comic Sans MS`
-        ctx.fillText(msg.text, 10, (render.canvas.height*1.5)-(i*20)-20)
+        ctx.fillText(msg.text, 10, (render.canvas.height*1.5)-(i*fontSize)-20)
     }
 }
 
 function pushMsg(text) {
-    renderLog.push({
+    log.push({
         text:text,
     })
 }
