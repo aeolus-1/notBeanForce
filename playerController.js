@@ -18,11 +18,15 @@ class PlayerController {
             preKeys:{},
             id:Math.floor(Math.random()*10e+10),
 
+            name:"unnamed",
+
             
 
             ...options,
         }
         this.options = options
+
+        this.name = options.name
 
         this.keys = this.options.keys
         this.preKeys = this.options.preKeys
@@ -85,9 +89,14 @@ class PlayerController {
         this.preOnground = false
 
         this.stabilsing = true
+        this.bleeding = false
+
+        this.isDucking = false
+        this.ducking = false
+        this.preDucking = false
 
         this.stats = {
-            killCount:0,
+            health:1,
         }
     }
     update(keys=this.keys, prekeys=this.preKeys){
@@ -98,6 +107,24 @@ class PlayerController {
         if (this.body.position.y > 2500) {
             this.kill()
             respawn()
+        }
+
+        if (this.ducking && !this.preDucking && !this.isDucking) {
+            this.duck()
+        }
+        if (this.preDucking && !this.ducking && this.isDucking) {
+            this.unDuck()
+        }
+        this.preDucking = this.ducking
+
+        if (this.stats.health <= 0.4 && (new Date()).getTime()%6>3) {
+            particleController.spawnParticle(v(
+                this.body.position.x+((randInt(-100,100)/100)*20),
+                this.body.position.y+(Math.abs(this.body.bounds.min.y-this.body.bounds.max.y)*0.35)+((randInt(-100,100)/100)*20)
+            ), {
+                render:{fillStyle:"#f00"},
+                halfLife:(Math.random()>0.85&&this.stats.health>0)?1000:30
+            })
         }
 
         
@@ -287,8 +314,8 @@ class PlayerController {
                 runP(-1)
             }
 
-            if (keys["shift"] && !preKeys["shift"]) this.duck()
-            if (!keys["shift"] && preKeys["shift"]) this.unDuck()
+            if (keys["shift"] && !preKeys["shift"]) this.ducking = true
+            if (!keys["shift"] && preKeys["shift"]) this.ducking = false
                 
             
             if (keys[" "] && !preKeys[" "]) {
@@ -312,7 +339,7 @@ class PlayerController {
                             
                         },
                         {
-                            halfLife:2.5,
+                            halfLife:5,
                             ignoreGravity:true,
                             render:{
                                 fillStyle:"#000"
@@ -328,6 +355,8 @@ class PlayerController {
 
 
     duck(){
+        Matter.Common.set(this.body, "friction", 0.0015)
+        this.isDucking = true
         var oldAngle = this.body.angle
         Matter.Body.setAngle(this.body, 0)
         Matter.Body.scale(this.body, 1,0.5,v(
@@ -337,6 +366,8 @@ class PlayerController {
         Matter.Body.setAngle(this.body, oldAngle)
     }
     unDuck() {
+        Matter.Common.set(this.body, "friction", 0.01)
+        this.isDucking = false
         var oldAngle = this.body.angle
         Matter.Body.setAngle(this.body, 0)
         Matter.Body.scale(this.body, 1,2,v(
@@ -346,16 +377,17 @@ class PlayerController {
         Matter.Body.setAngle(this.body, oldAngle)    }
 
 
-    kill(part=false) {
+    kill(part=false, player=this) {
         this.stabilsing = false
         this.options.speed = 0
         this.options.jumpHeight = 0
         this.alive = false
+        pushMsg(`${this.name} 🔫 ${player.name}`)
         if (part) {
             particleController.createSquareExplosion(
                 this.body.position,
                 {
-                    amount:20,
+                    amount:40,
                     yMin:-3,
                     yMax:3,
                     xMax:3,
@@ -363,14 +395,40 @@ class PlayerController {
                     
                 },
                 {
-                    halfLife:20,
+                    halfLife:40,
                     render:{
-                        fillStyle:"rgb(119,106,35)"
+                        fillStyle:"rgb(255,40,0)"
                     }
                 }
             )
             
         }
+    }
+    damage(amount, player) {
+        this.stats.health -= amount
+        if (this.stats.health <= 0) {
+            this.kill(true, player)
+        }
+        particleController.createSquareExplosion(
+            v(
+                this.body.position.x,
+                this.body.position.y+(this.options.body.scale*2.5)
+            ),
+            {
+                amount:50*amount,
+                yMin:-0.3,
+                yMax:-0.1,
+                xMax:2,
+                xMin:-2,
+                
+            },
+            {
+                halfLife:10,
+                render:{
+                    fillStyle:"rgb(170,0,0)"
+                }
+            }
+        )
     }
 
     shoot() {
@@ -382,20 +440,34 @@ var bullets = new Array(),
 
 Matter.Composite.add(engine.world, bulletsComp)
 function runBullets() {
+    
     for (let i = 0; i < bullets.length; i++) {
         const bul = bullets[i];
-
+        var polarVelocity = {
+            a:(-getAngle(v(), bul.velocity)-90)*(Math.PI/180),
+            d:getDst(v(), bul.velocity)
+        }
+        Matter.Body.setVelocity(bul, v(
+            Math.cos(polarVelocity.a)*20,
+            Math.sin(polarVelocity.a)*20
+        ))
         var hits = Matter.Query.collides(bul, [...engine.world.bodies,...playersComp.bodies])//.filter(a=>{return a.bodyB.id!=bul.id})
         if (hits.length>0) {
+            bul.bounces += 1
             if (!hits[0].bodyA.portal) {
-                Matter.Composite.remove(bulletsComp, bul)
-                bullets.splice(i, 1)
+                
                 
 
                 if (hits[0].bodyB.id == player.body.id) {
-                    player.kill()
+                    player.damage(0.20001, bul.owner)
+                    Matter.Composite.remove(bulletsComp, bul)
+                    bullets.splice(i, 1)
                     hits[0].bodyA.owner.stats.killCount += 1
                 } else {
+                    if (bul.bounces > 0) {
+                        Matter.Composite.remove(bulletsComp, bul)
+                        bullets.splice(i, 1)
+                    }
                     particleController.createSquareExplosion(
                         bul.position,
                         {
@@ -415,7 +487,7 @@ function runBullets() {
                     )
                 }
             }
-            //
+            
 
         }
         
@@ -434,6 +506,8 @@ function addBullet(pos, dir, player) {
         density:1,
 
         restitution:1,
+
+        bounces:0,
     })
     bullet.ignoreGravity = true
     bullet.collisionFilter.group = 67894

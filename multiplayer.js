@@ -172,6 +172,8 @@ class ClientConnection extends Connection {
       alive: player.alive,
       id: player.body.id,
       stabilsing: player.stabilsing,
+      ducking:player.isDucking,
+      bleeding:player.bleeding,
     });
   }
 
@@ -246,6 +248,8 @@ function receiveMultiplayerData(data) {
       enemeyPlayer.controller.preKeys = enemeyPlayer.controller.keys
       enemeyPlayer.controller.keys = data.keys
       enemeyPlayer.controller.stabilsing = data.stabilsing||true
+      enemeyPlayer.controller.isDucking = data.ducking||false
+      enemeyPlayer.controller.bleeding = data.bleeding||false
 
       if (!data.alive) enemeyPlayer.controller.kill(false);
     }
@@ -321,7 +325,7 @@ var hostConnections = [],
 document.body.onload = () => {
   setTimeout(() => {
     if (host) {
-      
+      player.name = "host"
     } else if (joining) {
       clientConnection = new ClientConnection(joining, true);
       clientConnection.init()

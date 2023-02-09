@@ -71,6 +71,34 @@ Matter.Events.on(render, "beforeRender", function () {
 Matter.Events.on(render, "afterRender", function () {
   var ctx = render.context,
     width = 100;
+
+  
+
+  function renderHealthBar(pos, t) {
+    //t = (((new Date()).getTime())/1000)%1
+    //console.log(t)
+
+    t = clamp(t, 0, 1)
+
+    var size = 25
+    
+    ctx.beginPath()
+    ctx.moveTo(pos.x-size,pos.y)
+    ctx.arc(pos.x, pos.y, size, Math.PI, 0)
+    ctx.strokeStyle = "#f00"
+    ctx.lineWidth = 7
+    ctx.stroke()
+    ctx.closePath()
+    ctx.beginPath()
+    ctx.moveTo(pos.x-size,pos.y)
+    ctx.arc(pos.x, pos.y, size, Math.PI, Math.PI+(Math.PI*t))
+    ctx.strokeStyle = "#0f0"
+    ctx.lineWidth = 7
+    ctx.stroke()
+    ctx.closePath()
+    
+  }
+
   var img = document.getElementById("gun");
   var height = (img.height / img.width) * width,
     direction = Math.sign(player.body.velocity.x);
@@ -89,7 +117,13 @@ Matter.Events.on(render, "afterRender", function () {
     height
   );
 
+  
+
   ctx.restore();
+  renderHealthBar(v(
+    player.body.position.x,
+    player.body.position.y-40
+  ), player.stats.health)
     for (let i = 0; i < enemeyPlayers.length; i++) {
       const enPlayer = enemeyPlayers[i];
       direction = Math.sign(enPlayer.body.velocity.x);
@@ -110,6 +144,8 @@ Matter.Events.on(render, "afterRender", function () {
 
     ctx.restore();
     }
+
+    renderLog(ctx)
   
 
 

@@ -45,8 +45,8 @@ class ParticleController {
                 restitution:1,
             }
         )
-
-        Matter.Body.scale(partBody, options.scale*10,options.scale*10)
+            var scale = randInt(70,150)/10
+        Matter.Body.scale(partBody, options.scale*scale,options.scale*scale)
 
         partBody.particle = true
         partBody.halfLife = options.halfLife

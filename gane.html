@@ -73,6 +73,7 @@ function addBody(bod) {
         
     </script>
     <script src="camera.js"></script>
+    <script src="log.js"></script>
 
     <script src="teleporters.js"></script>
 
@@ -103,6 +104,7 @@ function addBody(bod) {
       player.options.speed = 0.6
       player.options.jumpHeight = 1
       player.alive = true
+      player.stats.health = 1
       player.stabilsing = true
       var point = {...spawnPoints[randInt(0,spawnPoints.length-1)]}
       console.log(point)
