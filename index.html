@@ -44,6 +44,7 @@
     <h2>Username</h2>
     <input type="text" id="nameInput">
     <hr>
+    <div id="hostingSection">
     <button id="host">Host Game</button>
     <div id="mapSelection">
         <img class="imgSelection selected" id="imgSelect1" onclick=select1() src="imgs/levelPng1.png" alt="">
@@ -51,6 +52,8 @@
         <img class="imgSelection" id="imgSelect3" onclick=select3() src="imgs/levelPng3.png" alt="">
     </div>
     <hr>
+
+    </div>
     <span style="font-size: x-large;">ID:</span><input style="width:200px" id="idInput" placeholder="e.g. 26473" type="text"><button id="join">Join Game</button>
     <script>
         function getURLInfo(string) {
@@ -86,7 +89,10 @@ var urlInfo = getURLInfo(location.href)
             window.open(`./gane.html?join=${id}?userName=${username()}?level=${selectedMap}`)
         }
 
-        if (urlInfo.join!=undefined) document.getElementById('idInput').value = urlInfo.join
+        if (urlInfo.join!=undefined) {
+            document.getElementById('idInput').value = urlInfo.join
+            document.getElementById("hostingSection").style.display = "none"
+        }
     </script>
 </body>
 </html>
