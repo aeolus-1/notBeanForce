@@ -45,9 +45,11 @@ var enemeyPreKeys = {}
         if (window.clientConnection!=undefined) if (joining!=undefined) {
           console.log(window.clientConnection.conn._open)
           window.clientConnection.updateHost()
+          logEvents = []
         }
 
         telepoter.update()
+        telepoter2.update()
         
         enemeyPreKeys = {...window.enemeyKeys}
         Engine.update(engine, Math.min((new Date()).getTime()-preTimeDelta, 50))
@@ -101,6 +103,7 @@ function addBody(bod) {
 
 
     var telepoter = new Teleporter(v(300,100), v(3700,1471))
+    var telepoter2 = new Teleporter(v(2914,2300), v(2298,-200))
 
     Matter.Composite.allBodies(engine.world).forEach(b=>{if(b.platform){b.collisionFilter.group = 45678903;b.render.fillStyle = "#eee"}})
     

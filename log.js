@@ -11,7 +11,14 @@ function renderLog(ctx) {
 }
 
 function pushMsg(text) {
-    log.push({
-        text:text,
-    })
+    
+    if (host) {
+        log.push({
+              text:text,
+          })
+    } else {
+        logEvents.push({
+            text:text
+        })
+    }
 }

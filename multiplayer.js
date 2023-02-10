@@ -7,6 +7,7 @@ var status = location.href.split("?")[1],
   if (username != undefined) {username = username.split("=")[1]} else {username = prompt("Username?")}
 
 
+  var logEvents = []
 
 
 class Connection {
@@ -163,30 +164,38 @@ class ClientConnection extends Connection {
 
   getClientData() {
     return JSON.stringify({
-      position: player.body.position,
-      velocity: player.body.velocity,
-      keys: keys,
-      alive: player.alive,
-      id: player.body.id,
-      stabilsing: player.stabilsing,
-      ducking:player.isDucking,
-      bleeding:player.bleeding,
-      username:player.username,
+      player:{
+        position: player.body.position,
+        velocity: player.body.velocity,
+        keys: keys,
+        alive: player.alive,
+        id: player.body.id,
+        stabilsing: player.stabilsing,
+        ducking:player.isDucking,
+        bleeding:player.bleeding,
+        username:player.username,
+      },
+      logEvents:logEvents
     });
+    logEvents = []
   }
 
   getMultiplayerData() {
     return JSON.stringify({
-      position: player.body.position,
-      velocity: player.body.velocity,
-      keys: keys,
-      alive: player.alive,
-      id: player.body.id,
-      stabilsing: player.stabilsing,
-      ducking:player.isDucking,
-      bleeding:player.bleeding,
-      username:player.username,
+      player:{
+        position: player.body.position,
+        velocity: player.body.velocity,
+        keys: keys,
+        alive: player.alive,
+        id: player.body.id,
+        stabilsing: player.stabilsing,
+        ducking:player.isDucking,
+        bleeding:player.bleeding,
+        username:player.username,
+      },
+      logEvents:logEvents
     });
+    logEvents = []
   }
 
   updateHost() {
@@ -222,7 +231,7 @@ class HostConnection extends Connection {
       console.log(data, data.split(" ")[1])
       
 
-      eval(data.split(" ")[1].replace("\"",""))
+      //eval(data.split(" ")[1].replace("\"",""))
     } else receiveMultiplayerData(JSON.parse(data))
     
   }
@@ -234,6 +243,9 @@ class HostConnection extends Connection {
 }
 
 function receiveMultiplayerData(data) {
+  console.log(data)
+
+  
   function runsinglePlayer(data) {
     var ids = [];
 
@@ -269,9 +281,13 @@ function receiveMultiplayerData(data) {
       if (!data.alive) enemeyPlayer.controller.kill(false);
     }
   }
-  if (data.length==undefined) {
-    runsinglePlayer(data)
+  if (data.players==undefined) {
+    runEvents(data.logEvents)
+    runsinglePlayer(data.player)
   } else {
+    log = data.log
+    data = data.players
+
     for (let i = 0; i < data.length; i++) {
       const player2 = data[i];
       if (player2.id != player.body.id) runsinglePlayer(player2)
@@ -324,7 +340,10 @@ function getMultiplayerData() {
       }
     )
   }
-  return data
+  return {
+    players:data,
+    log:log,
+  }
 }
 
 function addClientPort() {
@@ -356,4 +375,8 @@ document.body.onload = () => {
     }
 };
 
+
+function runEvents(events) {
+  log = [...log, ...events]
+}
 

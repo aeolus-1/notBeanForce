@@ -75,6 +75,8 @@ class PlayerController {
         this.alive = true
         this.engine.players = this.engine.players||[]
         this.engine.players.push(this)
+
+        this.shootTicker = 0
     
         this.jumpTicker = 0
         this.jumps = options.jumps
@@ -103,11 +105,9 @@ class PlayerController {
         this.jumpTicker += this.engine.timing.lastElapsed
         this.droppingPlatform -= this.engine.timing.lastElapsed
         this.falling += this.engine.timing.lastElapsed
+        this.shootTicker -= this.engine.timing.lastElapsed
         this.updateControls(keys, prekeys)
-        if (this.body.position.y > 2500) {
-            this.kill()
-            respawn()
-        }
+        
 
         if (this.ducking && !this.preDucking && !this.isDucking) {
             this.duck()
@@ -253,17 +253,17 @@ class PlayerController {
                 }
                 
                 this.preOnground = onground
-            if (keys.w && !preKeys.w && this.jumps > 0) {
+            if (((keys.w && !preKeys.w)||(keys.arrowup && !preKeys.arrowup)) && this.jumps > 0) {
                 this.jumps -= 1
                 this.jumpTicker = 0
                 Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -8*this.options.jumpHeight))
             }
-            if (!onground && keys.w && this.jumpTicker < 20 && this.body.velocity.y < 0) {
+            if (!onground && (keys.w || keys.arrowup) && this.jumpTicker < 20 && this.body.velocity.y < 0) {
                 Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -8*this.options.jumpHeight))
             }
     
     
-            if (groundCollide.length>0 && keys.s && this.checkingForCollisionsFor == undefined) {
+            if (groundCollide.length>0 && (keys.s || keys.arrowdown) && this.checkingForCollisionsFor == undefined) {
                 var floor = groundCollide[0]
                 if (floor.platform) {
                     this.checkingForCollisionsFor = floor
@@ -304,12 +304,12 @@ class PlayerController {
                     }
                 )
             }
-            if (keys.a) {
+            if (keys.a || keys.arrowleft) {
                 Matter.Body.setVelocity(this.body, v((baseVel)-speed, this.body.velocity.y))
                 runP(1)
                 
             }
-            if (keys.d) {
+            if (keys.d || keys.arrowright) {
                 Matter.Body.setVelocity(this.body, v((baseVel)+speed, this.body.velocity.y))
                 runP(-1)
             }
@@ -318,7 +318,8 @@ class PlayerController {
             if (!keys["shift"] && preKeys["shift"]) this.ducking = false
                 
             
-            if (keys[" "] && !preKeys[" "]) {
+            if (keys[" "] && this.shootTicker <= 0) {
+                this.shootTicker = 12
                 var pos = v(
                     this.body.position.x+(Math.sign(this.body.velocity.x)*100),
                     this.body.position.y
@@ -382,7 +383,7 @@ class PlayerController {
         this.options.speed = 0
         this.options.jumpHeight = 0
         this.alive = false
-        pushMsg(`${this.name} 🔫 ${player.name}`)
+        if (player.body.id == this.body.id) pushMsg(`${this.name} 🔫 ${player.name}`)
         if (part) {
             particleController.createSquareExplosion(
                 this.body.position,
