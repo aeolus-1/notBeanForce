@@ -86,7 +86,7 @@ var urlInfo = getURLInfo(location.href)
             var id = document.getElementById('idInput').value
             selectedMap = parseInt(id[0])
                 
-            window.open(`./gane.html?join=${id}?userName=${username()}?level=${selectedMap}`)
+            window.open(`./gane.html?join=${id}?userName=${username()}?level=${selectedMap}`,(urlInfo.join!=undefined)?"_self":undefined)
         }
 
         if (urlInfo.join!=undefined) {
