@@ -49,9 +49,9 @@ class Connection {
         return false;
     })();return false;">Copy Link</a> (Good for one person only)<br>
       <span>Waiting ...</span>
-      </div>
+      </div><br>
       `
-      document.getElementById("copyA").href = ''
+      setNewClient(false)
       console.log("Awaiting connection...");
       if (this.connection.joining) {
         this.connection.join(this.connection.hostId);
@@ -359,6 +359,7 @@ function addClientPort() {
   var newConn = new HostConnection();
   hostConnections.push(newConn);
   newConn.init();
+  setNewClient(true)
 }
 var enemeyPlayers = new Array(),
   enemeyPlayerComp = Matter.Composite.create();
@@ -391,4 +392,7 @@ function runEvents(events) {
 
 function setPortDivContent(id, content) {
   document.getElementById(`clientPort-${id}`).children[2].textContent = content
+}
+function setNewClient(disabled) {
+  document.getElementById("addClientBut").disabled = disabled
 }

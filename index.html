@@ -39,6 +39,8 @@
     </style>
 </head>
 <body>
+    <h1>Peer To Peer / Serverless</h1>
+    <hr>
     <h2>Username</h2>
     <input type="text" id="nameInput">
     <hr>
@@ -51,6 +53,17 @@
     <hr>
     <span style="font-size: x-large;">ID:</span><input style="width:200px" id="idInput" placeholder="e.g. 26473" type="text"><button id="join">Join Game</button>
     <script>
+        function getURLInfo(string) {
+  var info = string.split("?"),
+    returnOb = {}
+  for (let i = 1; i < info.length; i++) {
+    const text = info[i];
+    returnOb[text.split("=")[0]] = text.split("=")[1]
+  }
+  return returnOb
+}
+var urlInfo = getURLInfo(location.href)
+
         var selectedMap = 1
         function selectMap(num) {
             document.getElementById("imgSelect"+selectedMap).classList.remove("selected")
@@ -72,6 +85,8 @@
                 
             window.open(`./gane.html?join=${id}?userName=${username()}?level=${selectedMap}`)
         }
+
+        if (urlInfo.join!=undefined) document.getElementById('idInput').value = urlInfo.join
     </script>
 </body>
 </html>

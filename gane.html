@@ -42,6 +42,24 @@ var urlInfo = getURLInfo(location.href)
     <script src="textParser.js"></script>
     <img src="m16.png" id="gun">
     <script>
+
+window.addEventListener('resize', function(event) {
+    render.canvas.width = window.innerWidth
+    render.canvas.height = window.innerHeight
+}, true);
+function collapse(e) {
+  
+    e.classList.toggle("active");
+    var content = e.nextElementSibling;
+    if (content.style.display === "" || content.style.display === "block") {
+      content.style.display = "none";
+      e.textContent = "[Expand]"
+    } else {
+      content.style.display = "block";
+      e.textContent = "[Close]"
+      
+    }
+  }
       var spawnPoints = [
         [v(855.8181670104865,1522.0270814533455),v(2247.554572466912,940.9677959175898),v(967.6447812937414,367.2323634734135),v(2307.4936882779007,349.29906655323293),v(3478.786842405824,343.7395804083279),v(3472.383292059527,1143.6681164373022),v(2347.5319305552416,1542.0470304068654),v(2704.750694938356,1990.8464481503904)],
         [v(2484.485616757734,603.9030341431072),v(1845.7061920420656,313.29976252721843),v(1235.236416364406,1033.2064039180718),v(366.54223431619073,262.8761330125663)],
@@ -162,8 +180,13 @@ function addBody(bod) {
     
 </script>
 <div style="position:absolute;z-index:100;top:0px;">
-  <a href="index.html">Main Menu</a><br><br>
-  <button id="addClientBut">Add Player</button><br><div id="idDiv" ></div>
+  <a href="index.html">⇱ Main Menu</a><br><br>
+  <a style="cursor: pointer;" onclick="collapse(this)">[Close]</a>
+  <div style="margin-left: 10px;">
+    <button id="addClientBut">Add Player</button><br><br><div id="idDiv" ></div>
+  </div>
+
+  
 </div>
 
 
