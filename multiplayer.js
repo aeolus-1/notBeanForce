@@ -1,10 +1,11 @@
+
 var status = location.href.split("?")[1],
-  host = status.includes("host"),
-  joining = status.includes("join") ? status.split("=")[1] : false,
+  host = urlInfo.host||false,
+  joining = urlInfo.join||false//status.includes("join") ? status.split("=")[1] : false,
   online = false,
 
-  username = location.href.split("?")[2]
-  if (username != undefined) {username = username.split("=")[1]} else {username = prompt("Username?")}
+  username = urlInfo.userName||"unnamed"
+  //if (username != undefined) {username = username.split("=")[1]} else {username = prompt("Username?")}
 
 
   var logEvents = []

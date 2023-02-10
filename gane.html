@@ -17,12 +17,27 @@
     </style>
   </head>
   <body>
+    <script>
+      function getURLInfo(string) {
+  var info = string.split("?"),
+    returnOb = {}
+  for (let i = 1; i < info.length; i++) {
+    const text = info[i];
+    returnOb[text.split("=")[0]] = text.split("=")[1]
+  }
+  return returnOb
+}
+var urlInfo = getURLInfo(location.href)
+
+    </script>
     <script src="matterInit.js"></script>
     <script src="textParser.js"></script>
     <img src="m16.png" id="gun">
     <script>
-      var spawnPoints = [v(855.8181670104865,1522.0270814533455),v(2247.554572466912,940.9677959175898),v(967.6447812937414,367.2323634734135),v(2307.4936882779007,349.29906655323293),v(3478.786842405824,343.7395804083279),v(3472.383292059527,1143.6681164373022),v(2347.5319305552416,1542.0470304068654),v(2704.750694938356,1990.8464481503904)]
-
+      var spawnPoints = [
+        [v(855.8181670104865,1522.0270814533455),v(2247.554572466912,940.9677959175898),v(967.6447812937414,367.2323634734135),v(2307.4936882779007,349.29906655323293),v(3478.786842405824,343.7395804083279),v(3472.383292059527,1143.6681164373022),v(2347.5319305552416,1542.0470304068654),v(2704.750694938356,1990.8464481503904)],
+        [v(2484.485616757734,603.9030341431072),v(1845.7061920420656,313.29976252721843),v(1235.236416364406,1033.2064039180718),v(366.54223431619073,262.8761330125663)]
+      ][levelSelection-1]
 var enemeyPreKeys = {}
     setInterval(() => {
       if (keys["enter"]&&!player.alive) {
@@ -102,11 +117,20 @@ function addBody(bod) {
         preKeys:prekeys,
         username:username,
     })
+    var telepoter = {update:()=>{}},
+        telepoter2 = {update:()=>{}};
 
+    ([
+      ()=>{
+        telepoter = new Teleporter(v(300,100), v(3700,1471))
+        telepoter2 = new Teleporter(v(2914,2300), v(2298,-200))
+      },
+      ()=>{
+        telepoter = new Teleporter(v(1371,1533), v(300,100))
 
-
-    var telepoter = new Teleporter(v(300,100), v(3700,1471))
-    var telepoter2 = new Teleporter(v(2914,2300), v(2298,-200))
+      },
+    ][levelSelection-1]())
+     
 
     Matter.Composite.allBodies(engine.world).forEach(b=>{if(b.platform){b.collisionFilter.group = 45678903;b.render.fillStyle = "#eee"}})
     

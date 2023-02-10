@@ -1,8 +1,14 @@
 var camera = v(),
-  cameraBounds = {
-    min: v(0, 0),
-    max: v(4076, 2200),
-  };
+  cameraBounds = [
+    cameraBounds = {
+      min: v(0, 0),
+      max: v(4076, 2200),
+    },
+      {
+      min: v(0, 0),
+      max: v(3000, 1500),
+    },
+  ][levelSelection-1]
 
 Matter.Events.on(render, "beforeRender", function () {
   let center = v(-render.canvas.width / 4, -render.canvas.height / 4),

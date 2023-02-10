@@ -10,12 +10,12 @@
     <button id="join">Join Game</button>
     <script>
         document.getElementById("host").onclick = function(){
-            window.open(`./gane.html?host`)
+            window.open(`./gane.html?host=true?level=2`)
         }
         document.getElementById("join").onclick = function(){
             var id = prompt("Game Id?"),
                 userName = prompt("Username?")||"unnamed"
-            window.open(`./gane.html?join=${id}?userName=${userName}`)
+            window.open(`./gane.html?join=${id}?userName=${userName}?level=2`)
         }
     </script>
 </body>
