@@ -49,6 +49,8 @@ var enemeyPreKeys = {}
           logEvents = []
         }
 
+        if (player.body.position.y > 2500) respawn()
+
         telepoter.update()
         telepoter2.update()
         
