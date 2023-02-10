@@ -262,7 +262,8 @@ function receiveMultiplayerData(data) {
     var idIndex = findId(data.id)
     if (idIndex < 0) {
       createClientEnemey(data.id);
-      pushMsg(`${data.username} has probably joined the battle`)
+      
+      pushMsg(JSON.stringify([{"text":`${data.username} has probably joined the game`,"color":"#1b2469"}]))
     }
     var idIndex = findId(data.id)
     if (idIndex >= 0) {

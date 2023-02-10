@@ -6,7 +6,8 @@ function renderLog(ctx) {
         const msg = log[i];
         var fontSize = 40
         ctx.font = `${fontSize}px Comic Sans MS`
-        ctx.fillText(msg.text, 10, (render.canvas.height*1.5)-(i*fontSize)-20)
+        TextParser.renderJSONText(ctx, v(10, (render.canvas.height*1.5)-(i*fontSize)-20), msg.text)
+        //ctx.fillText(msg.text, 10, (render.canvas.height*1.5)-(i*fontSize)-20)
     }
 }
 

@@ -386,7 +386,8 @@ class PlayerController {
             this.alive = false
             console.log("dieda")
             if (player.body.id == this.body.id || true) {
-                pushMsg(`${player.username} killed ${this.username}`)
+                
+                pushMsg(JSON.stringify([{"text":`${player.username}`,"color":"red"},{"text":" killed "},{"text":`${this.username}`,"color":"red"}]))
             }
             if (part) {
                 particleController.createSquareExplosion(
