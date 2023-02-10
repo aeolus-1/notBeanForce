@@ -379,30 +379,35 @@ class PlayerController {
 
 
     kill(part=false, player=this) {
-        this.stabilsing = false
-        this.options.speed = 0
-        this.options.jumpHeight = 0
-        this.alive = false
-        if (player.body.id == this.body.id) pushMsg(`${this.name} 🔫 ${player.name}`)
-        if (part) {
-            particleController.createSquareExplosion(
-                this.body.position,
-                {
-                    amount:40,
-                    yMin:-3,
-                    yMax:3,
-                    xMax:3,
-                    xMin:-3,
-                    
-                },
-                {
-                    halfLife:40,
-                    render:{
-                        fillStyle:"rgb(255,40,0)"
+        if (this.alive) {
+            this.stabilsing = false
+            this.options.speed = 0
+            this.options.jumpHeight = 0
+            this.alive = false
+            console.log("dieda")
+            if (player.body.id == this.body.id || true) {
+                pushMsg(`${player.username} killed ${this.username}`)
+            }
+            if (part) {
+                particleController.createSquareExplosion(
+                    this.body.position,
+                    {
+                        amount:40,
+                        yMin:-3,
+                        yMax:3,
+                        xMax:3,
+                        xMin:-3,
+                        
+                    },
+                    {
+                        halfLife:40,
+                        render:{
+                            fillStyle:"rgb(255,40,0)"
+                        }
                     }
-                }
-            )
-            
+                )
+                
+            }
         }
     }
     damage(amount, player) {
