@@ -102,10 +102,10 @@ class PlayerController {
         }
     }
     update(keys=this.keys, prekeys=this.preKeys){
-        this.jumpTicker += this.engine.timing.lastElapsed
-        this.droppingPlatform -= this.engine.timing.lastElapsed
-        this.falling += this.engine.timing.lastElapsed
-        this.shootTicker -= this.engine.timing.lastElapsed
+        this.jumpTicker += timeDelta/16
+        this.droppingPlatform -= timeDelta/16
+        this.falling += timeDelta/16
+        this.shootTicker -= timeDelta
         this.updateControls(keys, prekeys)
         
 
@@ -319,7 +319,7 @@ class PlayerController {
                 
             
             if (keys[" "] && this.shootTicker <= 0) {
-                this.shootTicker = 12
+                this.shootTicker = 250
                 var pos = v(
                     this.body.position.x+(Math.sign(this.body.velocity.x)*100),
                     this.body.position.y

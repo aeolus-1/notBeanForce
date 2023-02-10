@@ -1,12 +1,16 @@
 var camera = v(),
   cameraBounds = [
-    cameraBounds = {
+    {
       min: v(0, 0),
       max: v(4076, 2200),
     },
       {
       min: v(0, 0),
       max: v(3000, 1500),
+    },
+    {
+      min: v(-100, -500),
+      max: v(4800, 2900),
     },
   ][levelSelection-1]
 

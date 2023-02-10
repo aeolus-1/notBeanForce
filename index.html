@@ -3,19 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="names.js"></script>
     <title>gane screen</title>
+    <style>
+        body {
+            text-align: center;
+            margin-top: 100px;
+            font-family: "Comic Sans MS";
+        }
+        h2 {
+            margin:0px;
+        }
+        hr {
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        button {
+            font-size: xx-large;
+        }
+        input {
+            font-size: xx-large;
+        }
+
+        .imgSelection {
+            margin:25px;
+            border: 5px solid white;
+            border-radius: 5px;
+        }
+        .imgSelection:hover {
+            background-color: lightgrey;
+        }
+        .selected {
+            border:5px solid yellow;
+        }
+    </style>
 </head>
 <body>
-    <button id="host">Host Game</button><br>
-    <button id="join">Join Game</button>
+    <h2>Username</h2>
+    <input type="text" id="nameInput">
+    <hr>
+    <button id="host">Host Game</button>
+    <div id="mapSelection">
+        <img class="imgSelection selected" id="imgSelect1" onclick=select1() src="imgs/levelPng1.png" alt="">
+        <img class="imgSelection" id="imgSelect2" onclick=select2() src="imgs/levelPng2.png" alt="">
+        <img class="imgSelection" id="imgSelect3" onclick=select3() src="imgs/levelPng3.png" alt="">
+    </div>
+    <hr>
+    <span style="font-size: x-large;">ID:</span><input style="width:200px" id="idInput" placeholder="e.g. 26473" type="text"><button id="join">Join Game</button>
     <script>
+        var selectedMap = 1
+        function selectMap(num) {
+            document.getElementById("imgSelect"+selectedMap).classList.remove("selected")
+            document.getElementById("imgSelect"+num).classList.add("selected")
+            selectedMap = num
+        }
+        function select1() {selectMap(1)}
+        function select2() {selectMap(2)}
+        function select3() {selectMap(3)}
+
+        document.getElementById("nameInput").value = names[Math.floor(Math.random()*names.length)].split(",")[0]
+        function username() {return document.getElementById("nameInput").value}
         document.getElementById("host").onclick = function(){
-            window.open(`./gane.html?host=true?level=2`)
+            window.open(`./gane.html?host=true?userName=${username()}?level=${selectedMap}`)
         }
         document.getElementById("join").onclick = function(){
-            var id = prompt("Game Id?"),
-                userName = prompt("Username?")||"unnamed"
-            window.open(`./gane.html?join=${id}?userName=${userName}?level=2`)
+            var id = document.getElementById('idInput').value
+            selectedMap = parseInt(id[0])
+                
+            window.open(`./gane.html?join=${id}?userName=${username()}?level=${selectedMap}`)
         }
     </script>
 </body>

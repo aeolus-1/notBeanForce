@@ -42,10 +42,17 @@ class Connection {
       }
 
       console.log("ID: ", this.id);
-      if (host && this.connection.hostId==undefined) document.getElementById("idDiv").innerHTML += `<br><a target="_blank" href="https://aeolus-1.github.io/earlySSBGameIDK/gane.html?join=${this.id}">${this.id}</a>`
-
+      if (host && this.connection.hostId==undefined) document.getElementById("idDiv").innerHTML += `
+      <div class="clientPort" id="clientPort-${this.id}">
+      <b id="c${this.id}">${this.id}</b> - <a href="#" onclick="(function(){
+        navigator.clipboard.writeText('https://aeolus-1.github.io/notBeanForce?join=${this.id}');
+        return false;
+    })();return false;">Copy Link</a> (Good for one person only)<br>
+      <span>Waiting ...</span>
+      </div>
+      `
+      document.getElementById("copyA").href = ''
       console.log("Awaiting connection...");
-      console.log(this.joining)
       if (this.connection.joining) {
         this.connection.join(this.connection.hostId);
       } else {
@@ -77,9 +84,11 @@ class Connection {
 
       this.connection.conn = c;
       this.connection.conn.connection = this.connection;
+      console.log(this.connection instanceof HostConnection, host)
       if (host) {
         console.log(this.id)
-        document.getElementById("idDiv").innerHTML = document.getElementById("idDiv").innerHTML.replace(this.id+"</a>",this.id+"</a> - Connected")
+        setPortDivContent(this.id, "Connecting")
+        //document.getElementById("idDiv").innerHTML = document.getElementById("idDiv").innerHTML.replace(this.id+"</a>",this.id+`</a> - Connected <span id="connectNameSpan${this.id}>(unkown)</span>`)
       }
 
       console.log("Connected to: " + this.connection.conn.peer);
@@ -106,7 +115,7 @@ class Connection {
   }
   ready() {
     this.conn.on("data", function (data) {
-      this.connection.receiveMultiplayerData(data);
+      this.connection.receiveMultiplayerData(data, this.connection.lastPeerId);
     });
     this.conn.on("close", function () {
       this.conn = null;
@@ -142,6 +151,9 @@ class ClientConnection extends Connection {
 
     this.conn.on("open", function () {
       console.log("Connected to: " + this.peer);
+      if (host) {
+        setPortDivContent(this.connection.hostId, "Connected")
+      }
       
       
       
@@ -203,19 +215,14 @@ class ClientConnection extends Connection {
     this.conn.send(this.getMultiplayerData());
   }
 
-  receiveMultiplayerData(data) {
-    console.log(data);
-    /*
-        data = JSON.parse(data)
-        */
-  }
+  
 }
 class HostConnection extends Connection {
   constructor(buffer=false) {
     super();
     this.isBuffer = buffer
   }
-  init(id = `${Math.floor(Math.random() * 10e4)}`) {
+  init(id = `${levelSelection}${Math.floor(Math.random() * 10e4)}`) {
     this.initialize(id);
   }
 
@@ -225,7 +232,7 @@ class HostConnection extends Connection {
     console.log("initing")
   }
 
-  receiveMultiplayerData(data) {
+  receiveMultiplayerData(data, id) {
     if (data.split(" ")[0] == "buffer") {
       this.buffer(data.split(" ")[1])
     } if (data.split(" ")[0].includes("eval") && joining) {
@@ -233,7 +240,7 @@ class HostConnection extends Connection {
       
 
       //eval(data.split(" ")[1].replace("\"",""))
-    } else receiveMultiplayerData(JSON.parse(data))
+    } else receiveMultiplayerData(JSON.parse(data), id)
     
   }
   
@@ -243,8 +250,7 @@ class HostConnection extends Connection {
   }
 }
 
-function receiveMultiplayerData(data) {
-  console.log(data)
+function receiveMultiplayerData(data, id) {
 
   
   function runsinglePlayer(data) {
@@ -278,7 +284,6 @@ function receiveMultiplayerData(data) {
       enemeyPlayer.controller.ducking = data.ducking
       enemeyPlayer.controller.bleeding = data.bleeding
 
-      console.log(data.username)
       enemeyPlayer.controller.username = data.username
 
       if (!data.alive) enemeyPlayer.controller.kill(false);
@@ -287,6 +292,7 @@ function receiveMultiplayerData(data) {
   if (data.players==undefined) {
     runEvents(data.logEvents)
     runsinglePlayer(data.player)
+    setPortDivContent(id, `Connected - ${data.player.username}`)
   } else {
     log = data.log
     data = data.players
@@ -383,3 +389,6 @@ function runEvents(events) {
   log = [...log, ...events]
 }
 
+function setPortDivContent(id, content) {
+  document.getElementById(`clientPort-${id}`).children[2].textContent = content
+}

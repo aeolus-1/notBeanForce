@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
     <title>drawer</title>
     <script src="libs/peer.js"></script>
     <script src="libs/matter.js"></script>
@@ -14,6 +15,13 @@
         margin: 0%;
         overflow: hidden;
       }
+      .clientPort {
+        border: 2px solid black;
+        border-radius: 4px;
+        padding: 10px;
+      }
+     
+      
     </style>
   </head>
   <body>
@@ -36,7 +44,8 @@ var urlInfo = getURLInfo(location.href)
     <script>
       var spawnPoints = [
         [v(855.8181670104865,1522.0270814533455),v(2247.554572466912,940.9677959175898),v(967.6447812937414,367.2323634734135),v(2307.4936882779007,349.29906655323293),v(3478.786842405824,343.7395804083279),v(3472.383292059527,1143.6681164373022),v(2347.5319305552416,1542.0470304068654),v(2704.750694938356,1990.8464481503904)],
-        [v(2484.485616757734,603.9030341431072),v(1845.7061920420656,313.29976252721843),v(1235.236416364406,1033.2064039180718),v(366.54223431619073,262.8761330125663)]
+        [v(2484.485616757734,603.9030341431072),v(1845.7061920420656,313.29976252721843),v(1235.236416364406,1033.2064039180718),v(366.54223431619073,262.8761330125663)],
+        [v(296.24461233931805,1155.0343125273432),v(1794.9371795220568,839.3247980343544),v(3679.982835897538,1142.249762701258),v(3097.2258973238454,1999.3081861625435),v(2861.7132122041953,404.2997526822417),v(1532.613660230291,-44.78274304385008),v(364.6331487155431,230.00975931636927),v(1419.8396774540356,2301.1765535604827)],
       ][levelSelection-1]
 var enemeyPreKeys = {}
     setInterval(() => {
@@ -64,13 +73,14 @@ var enemeyPreKeys = {}
           logEvents = []
         }
 
-        if (player.body.position.y > 2500) respawn()
+        if (player.body.position.y > 3300) respawn()
 
         telepoter.update()
         telepoter2.update()
         
         enemeyPreKeys = {...window.enemeyKeys}
         Engine.update(engine, Math.min((new Date()).getTime()-preTimeDelta, 50))
+        timeDelta = Math.min((new Date()).getTime()-preTimeDelta, 50)
         particleController.runParticles()
         preTimeDelta = (new Date()).getTime()
         runBullets()
@@ -129,6 +139,10 @@ function addBody(bod) {
         telepoter = new Teleporter(v(1371,1533), v(300,100))
 
       },
+      ()=>{
+        telepoter = new Teleporter(v(3996,2162), v(450,30))
+
+      }
     ][levelSelection-1]())
      
 
@@ -147,7 +161,10 @@ function addBody(bod) {
     }
     
 </script>
-<div style="position:absolute;z-index:100;top:0px;"><a href="index.html">Main Menu</a><br><button id="addClientBut">+ Client</button><div id="idDiv" ></div></div>
+<div style="position:absolute;z-index:100;top:0px;">
+  <a href="index.html">Main Menu</a><br><br>
+  <button id="addClientBut">Add Player</button><br><div id="idDiv" ></div>
+</div>
 
 
   </body>
