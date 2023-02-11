@@ -26,6 +26,8 @@
   </head>
   <body>
     <script>
+      
+
       function getURLInfo(string) {
   var info = string.split("?"),
     returnOb = {}
@@ -42,6 +44,10 @@ var urlInfo = getURLInfo(location.href)
     <script src="textParser.js"></script>
     <img src="m16.png" id="gun">
     <script>
+      var options = localStorage.getItem("customOptions")
+      console.log(options)
+      if (options != "null"&&options!=null) runOptions(JSON.parse(options))
+      
 
 window.addEventListener('resize', function(event) {
     render.canvas.width = window.innerWidth

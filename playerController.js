@@ -105,7 +105,7 @@ class PlayerController {
         this.jumpTicker += timeDelta/16
         this.droppingPlatform -= timeDelta/16
         this.falling += timeDelta/16
-        this.shootTicker -= timeDelta
+        this.shootTicker -= timeDelta*customOptions.shootingSpeed
         this.updateControls(keys, prekeys)
         
 
@@ -380,6 +380,7 @@ class PlayerController {
 
     kill(part=false, player=this) {
         if (this.alive) {
+            //if (customOptions.permadeath) window.close()
             this.stabilsing = false
             this.options.speed = 0
             this.options.jumpHeight = 0
@@ -412,7 +413,7 @@ class PlayerController {
         }
     }
     damage(amount, player) {
-        this.stats.health -= amount
+        this.stats.health -= amount/customOptions.health
         if (this.stats.health <= 0) {
             this.kill(true, player)
         }
@@ -471,7 +472,7 @@ function runBullets() {
                     bullets.splice(i, 1)
                     hits[0].bodyA.owner.stats.killCount += 1
                 } else {
-                    if (bul.bounces > 0) {
+                    if (bul.bounces > (customOptions.bouncingbullets)?10:0) {
                         Matter.Composite.remove(bulletsComp, bul)
                         bullets.splice(i, 1)
                     }

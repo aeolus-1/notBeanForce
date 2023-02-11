@@ -8,8 +8,11 @@
     <style>
         body {
             text-align: center;
-            margin-top: 100px;
+            margin-top: 40px;
             font-family: "Comic Sans MS";
+        }
+        h1 {
+            margin-bottom: 0px;
         }
         h2 {
             margin:0px;
@@ -19,10 +22,10 @@
             margin-bottom: 30px;
         }
         button {
-            font-size: xx-large;
+            font-size: large;
         }
         input {
-            font-size: xx-large;
+            font-size: large;
         }
 
         .imgSelection {
@@ -36,16 +39,35 @@
         .selected {
             border:5px solid yellow;
         }
+        .customOptions {
+            border: 2px solid black;
+            border-radius: 5px;
+            columns: 2;
+        }
     </style>
 </head>
 <body>
     <h1>Peer To Peer / Serverless</h1>
+    <a href="https://github.com/aeolus-1/notBeanForce">Report bugs and give feedback</a>
     <hr>
     <h2>Username</h2>
     <input type="text" id="nameInput">
     <hr>
     <div id="hostingSection">
-    <button id="host">Host Game</button>
+    <button id="host">Host Game</button><br>
+    <span>Custom Options: </span><a href="#" onclick="collapse(this)">[Disabled]</a><!--⇧-->
+    <div class="customOptions" id="customOptions" style="display: none;">
+        <col>
+        <input label="permadeath" type="checkbox" id="permadeath"><label for="permadeath">Permadeath</label><br>
+        <input label="bouncingbullets" type="checkbox" id="bouncingbullets"><label for="bouncingbullets">Bouncing Bullets</label><br>
+
+        </col><br><br>
+        <col>
+            <input label="shootingspeed" onchange="setInputChange(this)" min="0.1" max="5" value="1" step="0.1" type="range" id="shootingspeed"><span>1</span> - <label for="shootingspeed">Shooting Speed</label><br>
+            <input label="gravity" onchange="setInputChange(this)" min="-1" max="4" value="1" step="0.1" type="range" id="gravity"><span>1</span> - <label for="gravity">Gravity</label><br>
+            <input label="health" onchange="setInputChange(this)" min="0.1" max="5" value="1" step="0.1" type="range" id="health"><span>1</span> - <label for="health">Health</label>
+        </col>
+    </div>
     <div id="mapSelection">
         <img class="imgSelection selected" id="imgSelect1" onclick=select1() src="imgs/levelPng1.png" alt="">
         <img class="imgSelection" id="imgSelect2" onclick=select2() src="imgs/levelPng2.png" alt="">
@@ -56,6 +78,36 @@
     </div>
     <span style="font-size: x-large;">ID:</span><input style="width:200px" id="idInput" placeholder="e.g. 26473" type="text"><button id="join">Join Game</button>
     <script>
+        function setInputChange(input) {
+            var next = input.nextElementSibling
+            next.textContent = input.value
+        }
+        function getOptions() {
+            var options = {}
+            function g(id){return document.getElementById(id)}
+            options.permadeath = g("permadeath").checked
+            options.bouncingbullets = g("bouncingbullets").checked
+
+            options.shootingSpeed = parseFloat(g("shootingspeed").value)
+            options.gravity = parseFloat(g("gravity").value)
+            options.health = parseFloat(g("health").value)
+
+            return options
+        }
+
+        function collapse(e) {
+  
+  e.classList.toggle("active");
+  var content = e.nextElementSibling;
+  if (content.style.display === "" || content.style.display === "block") {
+    content.style.display = "none";
+    e.textContent = "[Disabled]"
+  } else {
+    content.style.display = "block";
+    e.textContent = "[Enabled]"
+    
+  }
+}
         function getURLInfo(string) {
   var info = string.split("?"),
     returnOb = {}
@@ -79,8 +131,16 @@ var urlInfo = getURLInfo(location.href)
 
         document.getElementById("nameInput").value = names[Math.floor(Math.random()*names.length)].split(",")[0]
         function username() {return document.getElementById("nameInput").value}
+        localStorage.setItem("customOptions", null)
         document.getElementById("host").onclick = function(){
-            window.open(`./gane.html?host=true?userName=${username()}?level=${selectedMap}`)
+            var custom = (document.getElementById("customOptions").style.display != "none")
+            if (custom) {
+                localStorage.setItem("customOptions", JSON.stringify(getOptions()))
+            } else {
+                localStorage.setItem("customOptions", null)
+            }
+            window.open(`./gane.html?host=true?userName=${username()}?level=${selectedMap}${(custom)?"?custom=true":""}`)
+            
         }
         document.getElementById("join").onclick = function(){
             var id = document.getElementById('idInput').value

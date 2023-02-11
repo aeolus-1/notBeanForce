@@ -64,3 +64,13 @@ Matter.Composite.add(engine.world, mouseConstraint);
 var paused = false,
   preTimeDelta = (new Date()).getTime(),
   timeDelta = 1
+
+var customOptions = {
+  permadeath:false,
+  gravity:1,
+  shootingSpeed:1,
+}
+function runOptions(options) {
+  customOptions = options
+  engine.gravity.scale = options.gravity*0.001
+}
