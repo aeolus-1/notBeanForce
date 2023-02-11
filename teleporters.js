@@ -42,7 +42,7 @@ class Teleporter {
         }
         this.updateParticles()
         this.testColl = (body) => {
-            var coll = Matter.Query.collides(body, [...playersComp.bodies,...bulletsComp.bodies])
+            var coll = Matter.Query.collides(body, [...playersComp.bodies,...bulletsComp.bodies,...grenadeComp.bodies])
             for (let i = 0; i < coll.length; i++) {
                 const collision = coll[i];
                 this.portalTicker[collision.bodyB.id] = this.portalTicker[collision.bodyB.id]||0

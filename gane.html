@@ -123,6 +123,10 @@ var enemeyPreKeys = {}
         }
 
         if (player.body.position.y > 3300) respawn()
+        if (player.alive) {
+          player.displayRespawnMessage = false
+          player.hasGrenade = clamp(player.hasGrenade+0.00066, 0, 1)
+        }
 
         telepoter.update()
         telepoter2.update()
@@ -133,6 +137,7 @@ var enemeyPreKeys = {}
         particleController.runParticles()
         preTimeDelta = (new Date()).getTime()
         runBullets()
+        runGrenades()
         prekeys = {...keys}
 
     }, 1000/60);
@@ -159,6 +164,7 @@ function addBody(bod) {
     <script src="teleporters.js"></script>
 
     <script src="playerController.js"></script>
+    <script src="weapons.js"></script>
     <script src="particles.js"></script>
     <script src="multiplayer.js"></script>
 
@@ -203,10 +209,14 @@ function addBody(bod) {
       player.options.jumpHeight = 1
       player.alive = true
       player.stats.health = 1
+      player.shield = 2500
       player.stabilsing = true
       var point = {...spawnPoints[randInt(0,spawnPoints.length-1)]}
-      dummylog(point)
+      player.displayRespawnMessage = false
       Matter.Body.setPosition(player.body,point)
+      if (customOptions.permadeath) {
+        window.close()
+      }
     }
     
 </script>

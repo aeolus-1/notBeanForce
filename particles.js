@@ -12,10 +12,16 @@ class ParticleController {
         for (let i = 0; i < this.particles.length; i++) {
             var part = this.particles[i];
             part.halfLife -= this.engine.timing.lastElapsed
-            if (part.halfLife <= 0) {
+             
+            if (part.halfLife <= 0 || part.rad <= 0) {
                 Matter.Composite.remove(this.particlesComp, part)
                 this.particles.splice(i, 1)
             }
+
+            if (part.type == "display") {
+                part.rad = clamp(part.rad-(1*part.decayRate), 0, Infinity)
+            }
+                
         }
     }
     spawnParticle(pos,options={}) {
@@ -51,7 +57,8 @@ class ParticleController {
         partBody.particle = true
         partBody.halfLife = options.halfLife
         Matter.Body.setVelocity(partBody,options.velocity)
-
+        
+        //partBody.type="physics"
         this.particles.push(partBody)
         Matter.Body.setAngle(partBody, Math.random()*2*Math.PI)
         Matter.Composite.add(this.particlesComp, partBody)
@@ -76,6 +83,48 @@ class ParticleController {
         }
 
         
+    }
+
+    spawnDisplayParticle(pos, options) {
+        options={
+            
+            velocity:v(),
+            rad:15,
+            decayRate:3,
+            color:"#f50",
+            ...options,
+        }
+        options.halfLife *= (randInt(80,120)/100)
+
+        var partBody = {
+            pos:{...pos},
+            decayRate:options.decayRate,
+            velocity:options.velocity,
+            color:options.color,
+            rad:options.rad,
+        }
+
+        partBody.type="display"
+        this.particles.push(partBody)
+        
+    }
+
+    renderParticles() {
+        for (let i = 0; i < this.particles.length; i++) {
+            const part = this.particles[i];
+            if (part.type == "display") {
+                var ctx = render.context
+                ctx.save()
+                ctx.beginPath()
+
+                ctx.arc(part.pos.x,part.pos.y, part.rad, 0, Math.PI*2)
+                ctx.globalAlpha = 0.4
+                ctx.fillStyle = part.color
+                ctx.fill()
+                ctx.closePath()
+                ctx.restore()
+            }
+        }
     }
     
 }

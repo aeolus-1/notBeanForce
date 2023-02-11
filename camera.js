@@ -82,6 +82,8 @@ Matter.Events.on(render, "afterRender", function () {
   var ctx = render.context,
     width = 100;
 
+    particleController.renderParticles()
+
   
 
   function renderHealthBar(pos, t) {
@@ -106,6 +108,22 @@ Matter.Events.on(render, "afterRender", function () {
     ctx.lineWidth = 7
     ctx.stroke()
     ctx.closePath()
+
+    if (player.hasGrenade) {
+      var pos = v(
+        player.body.position.x+35,
+        player.body.position.y-60
+      ),
+        rad = 8
+      ctx.beginPath()
+      ctx.moveTo(pos.x, pos.y)
+      ctx.arc(pos.x, pos.y, rad, 0, (Math.PI*2)*player.hasGrenade)
+      ctx.lineTo(pos.x, pos.y)
+
+      ctx.fillStyle = "#f00"
+      ctx.fill()
+      ctx.closePath()
+    }
     
   }
 
@@ -130,6 +148,15 @@ Matter.Events.on(render, "afterRender", function () {
   
 
   ctx.restore();
+  if (player.displayRespawnMessage) {
+    var text = "Press [Enter] to Respawn",
+      width = ctx.measureText(text).width
+      ctx.save()
+      ctx.translate(camera.x, camera.y)
+      ctx.fillStyle = "#000"
+    ctx.fillText(text, -(width/2), 0)//player.body.position.x-(width/2),player.body.position.y-150)
+  ctx.restore()
+  }
   var fontSize = 30
   ctx.font = `${fontSize}px Comic Sans MS`
     var width = ctx.measureText(player.username).width/2

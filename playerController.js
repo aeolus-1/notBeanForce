@@ -73,6 +73,7 @@ class PlayerController {
         Matter.Composite.add(playersComp,this.body)
         
         this.alive = true
+        this.displayRespawnMessage = false
         this.engine.players = this.engine.players||[]
         this.engine.players.push(this)
 
@@ -97,6 +98,10 @@ class PlayerController {
         this.ducking = false
         this.preDucking = false
 
+        this.hasGrenade = 1
+
+        this.shield = 2500
+
         this.stats = {
             health:1,
         }
@@ -105,6 +110,7 @@ class PlayerController {
         this.jumpTicker += timeDelta/16
         this.droppingPlatform -= timeDelta/16
         this.falling += timeDelta/16
+        this.shield -= timeDelta
         this.shootTicker -= timeDelta*customOptions.shootingSpeed
         this.updateControls(keys, prekeys)
         
@@ -136,7 +142,10 @@ class PlayerController {
         }
         //Matter.Common.set(this.body, "angle", 0)
         //Matter.Common.set(this.body, "angularVelocity", lerp(this.body.angularVelocity,0,0.5))
-        
+        if (this.shield>0) {
+            var interval = 100
+            this.body.render.opacity = (((new Date()).getTime()%interval*2)>interval)?1:0.5
+        } else this.body.render.opacity = 1
 
 
         var groundCollide = this.selfCollisionCheck()
@@ -348,6 +357,11 @@ class PlayerController {
                         }
                     )
             }
+            if (keys["c"] && !preKeys["c"] && player.hasGrenade>=1) {
+                player.hasGrenade = 0
+                var dir = Math.sign(this.body.velocity.x)
+                addGrenade(v(this.body.position.x+(dir*20),this.body.position.y), dir, this)
+            }
             
             
         
@@ -367,7 +381,7 @@ class PlayerController {
         Matter.Body.setAngle(this.body, oldAngle)
     }
     unDuck() {
-        Matter.Common.set(this.body, "friction", 0.01)
+        Matter.Common.set(this.body, "friction", 0.03)
         this.isDucking = false
         var oldAngle = this.body.angle
         Matter.Body.setAngle(this.body, 0)
@@ -380,6 +394,13 @@ class PlayerController {
 
     kill(part=false, shootBy=this) {
         if (this.alive) {
+            if (this.body.id == player.body.id) setTimeout(() => {
+                player.displayRespawnMessage = true
+
+            }, 1500);
+            if (customOptions.permadeath) {
+                window.close()
+            }
             //if (customOptions.permadeath) window.close()
             this.stabilsing = false
             this.options.speed = 0
@@ -412,7 +433,7 @@ class PlayerController {
         }
     }
     damage(amount, player) {
-        this.stats.health -= amount/customOptions.health
+        this.stats.health -= (amount/customOptions.health)*(this.shield>0?0:1)
         if (this.stats.health <= 0) {
             this.kill(true, player)
         }
@@ -422,7 +443,7 @@ class PlayerController {
                 this.body.position.y+(this.options.body.scale*2.5)
             ),
             {
-                amount:50*amount,
+                amount:100*amount,
                 yMin:-0.3,
                 yMax:-0.1,
                 xMax:2,
@@ -441,93 +462,6 @@ class PlayerController {
     shoot() {
 
     }
-}
-var bullets = new Array(),
-    bulletsComp = Matter.Composite.create()
-
-Matter.Composite.add(engine.world, bulletsComp)
-function runBullets() {
-    
-    for (let i = 0; i < bullets.length; i++) {
-        const bul = bullets[i];
-        var polarVelocity = {
-            a:(-getAngle(v(), bul.velocity)-90)*(Math.PI/180),
-            d:getDst(v(), bul.velocity)
-        }
-        Matter.Body.setVelocity(bul, v(
-            Math.cos(polarVelocity.a)*20,
-            Math.sin(polarVelocity.a)*20
-        ))
-        var hits = Matter.Query.collides(bul, [...engine.world.bodies,...playersComp.bodies])//.filter(a=>{return a.bodyB.id!=bul.id})
-        if (hits.length>0) {
-            bul.bounces += 1
-            if (!hits[0].bodyA.portal) {
-                
-                
-
-                if (hits[0].bodyB.id == player.body.id) {
-                    player.damage(0.20001, bul.owner)
-                    Matter.Composite.remove(bulletsComp, bul)
-                    bullets.splice(i, 1)
-                    hits[0].bodyA.owner.stats.killCount += 1
-                } else {
-                    if (bul.bounces > (customOptions.bouncingbullets)?10:0) {
-                        Matter.Composite.remove(bulletsComp, bul)
-                        bullets.splice(i, 1)
-                    }
-                    particleController.createSquareExplosion(
-                        bul.position,
-                        {
-                            amount:4,
-                            yMin:-3,
-                            yMax:3,
-                            xMax:3,
-                            xMin:-3,
-                            
-                        },
-                        {
-                            halfLife:15,
-                            render:{
-                                fillStyle:"#000"
-                            }
-                        }
-                    )
-                }
-            }
-            
-
-        }
-        
-        
-    }
-}
-function addBullet(pos, dir, player) {
-    var bullet = Matter.Bodies.circle(pos.x, pos.y, 8,{
-        render:{
-            fillStyle:"#000"
-        },
-        friction:0,
-        frictionAir:0,
-        frictionStatic:0,
-
-        density:1,
-
-        restitution:1,
-
-        bounces:0,
-    })
-    bullet.ignoreGravity = true
-    bullet.collisionFilter.group = 67894
-    bullet.collisionFilter.cannotCollideWith.push(56730)
-    bullet.owner = player
-    //bullet.collisionFilter.cannotCollideWith.push(56730)
-    
-    Matter.Body.setVelocity(bullet, v(
-        (dir*20)+(player.body.velocity.x*0.05),
-        (player.body.velocity.y*0.05)
-    ))
-    bullets.push(bullet)
-    Matter.Composite.add(bulletsComp, bullet)
 }
 
 
