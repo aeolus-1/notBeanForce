@@ -86,7 +86,7 @@ Matter.Events.on(render, "afterRender", function () {
 
   function renderHealthBar(pos, t) {
     //t = (((new Date()).getTime())/1000)%1
-    //console.log(t)
+    //log(t)
 
     t = clamp(t, 0, 1)
 

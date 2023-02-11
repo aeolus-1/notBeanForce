@@ -20,6 +20,21 @@
         border-radius: 4px;
         padding: 10px;
       }
+
+      #logDiv {
+        font-family: "Comic Sans MS";
+        font-size: 25px;
+        margin: 7px;
+        max-height: 300px;
+        overflow: scroll;
+      }
+      .textblock {
+        max-height: 64px;
+        max-width: 550px;
+        width:550px;
+        overflow: scroll;
+        opacity: 70%;
+      }
      
       
     </style>
@@ -42,10 +57,10 @@ var urlInfo = getURLInfo(location.href)
     </script>
     <script src="matterInit.js"></script>
     <script src="textParser.js"></script>
-    <img src="m16.png" id="gun">
+    <img src="m16.png" style="display: none" id="gun">
     <script>
       var options = localStorage.getItem("customOptions")
-      console.log(options)
+      dummylog(options)
       if (options != "null"&&options!=null) runOptions(JSON.parse(options))
       
 
@@ -81,18 +96,28 @@ var enemeyPreKeys = {}
         for (let i = 0; i < enemeyPlayers.length; i++) {
           const player = enemeyPlayers[i];
           player.update()
-        }
-        for (let i = 0; i < hostConnections.length; i++) {
-          const conn = hostConnections[i];
-          if (conn.online) {
-            //conn.sendClientDataBack()
+          var inactiveFor = (new Date()).getTime()-player.afkTicker
+          if (inactiveFor > 5000) {
+            Matter.Composite.remove(engine.world, player.body)
+            enemeyPlayers.splice(i, 1)
+            console.log("kicked",player.portId)
+            for (let i = 0; i < hostConnections.length; i++) {
+              const conn = hostConnections[i];
+              if (conn.lastPeerId == player.portId) {
+                conn.conn.close()
+                setPortDivContent(player.portId, "Disconnected")
+                console.log("closing port")
+                if (host) pushMsg(`<span style='color:lightred;'><b>${player.username}</b> has disconnected</span>`)
+              }
+            }
           }
         }
+        
         player.bleeding = player.stats.health <= 0.4
         
         updateClients()
         if (window.clientConnection!=undefined) if (joining!=undefined) {
-          console.log(window.clientConnection.conn._open)
+          dummylog(window.clientConnection.conn._open)
           window.clientConnection.updateHost()
           logEvents = []
         }
@@ -180,19 +205,24 @@ function addBody(bod) {
       player.stats.health = 1
       player.stabilsing = true
       var point = {...spawnPoints[randInt(0,spawnPoints.length-1)]}
-      console.log(point)
+      dummylog(point)
       Matter.Body.setPosition(player.body,point)
     }
     
 </script>
 <div style="position:absolute;z-index:100;top:0px;">
   <a href="index.html">⇱ Main Menu</a><br><br>
+  <div style="display: none" id="hostOptionsDiv">
   <a style="cursor: pointer;" onclick="collapse(this)">[Close]</a>
   <div style="margin-left: 10px;">
     <button id="addClientBut">Add Player</button><br><br><div id="idDiv" ></div>
   </div>
+</div>
 
   
+</div>
+<div id="logDiv" style="position:absolute;z-index:100;bottom:0px;">
+
 </div>
 
 

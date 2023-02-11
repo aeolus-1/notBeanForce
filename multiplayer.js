@@ -10,6 +10,9 @@ var status = location.href.split("?")[1],
 
   var logEvents = []
 
+  
+
+
 
 class Connection {
   constructor(joining=undefined) {
@@ -19,7 +22,7 @@ class Connection {
     this.conn = null;
 
     this.online = false;
-    console.log(joining)
+    dummylog(joining)
     this.joining = joining
   }
   initialize(id) {
@@ -32,16 +35,16 @@ class Connection {
     this.peer.connection = this;
 
     this.peer.on("open", function (id) {
-      console.log(this);
+      dummylog(this);
       // Workaround for peer.reconnect deleting previous id
       if (this.id === null) {
-        console.log("Received null id from peer open");
+        dummylog("Received null id from peer open");
         this.id = this.connection.lastPeerId;
       } else {
         this.connection.lastPeerId = this.id;
       }
 
-      console.log("ID: ", this.id);
+      dummylog("ID: ", this.id);
       if (host && this.connection.hostId==undefined) document.getElementById("idDiv").innerHTML += `
       <div class="clientPort" id="clientPort-${this.id}">
       <b id="c${this.id}">${this.id}</b> - <a href="#" onclick="(function(){
@@ -52,18 +55,18 @@ class Connection {
       </div><br>
       `
       setNewClient(false)
-      console.log("Awaiting connection...");
+      dummylog("Awaiting connection...");
       if (this.connection.joining) {
         this.connection.join(this.connection.hostId);
       } else {
         if (this.connection.isBuffer) {
-          console.log("send reply buffer")
+          dummylog("send reply buffer")
           clientConnection.conn.send("buffer "+this.id)
         }
       }
     });
     this.peer.on("connection", function (c) {
-      console.log('connected')
+      dummylog('connected')
       // Allow only a single connection
       this.connection.online = true;
 
@@ -84,19 +87,19 @@ class Connection {
 
       this.connection.conn = c;
       this.connection.conn.connection = this.connection;
-      console.log(this.connection instanceof HostConnection, host)
+      dummylog(this.connection instanceof HostConnection, host)
       if (host) {
-        console.log(this.id)
+        dummylog(this.id)
         setPortDivContent(this.id, "Connecting")
         //document.getElementById("idDiv").innerHTML = document.getElementById("idDiv").innerHTML.replace(this.id+"</a>",this.id+`</a> - Connected <span id="connectNameSpan${this.id}>(unkown)</span>`)
       }
 
-      console.log("Connected to: " + this.connection.conn.peer);
+      dummylog("Connected to: " + this.connection.conn.peer);
 
       this.connection.ready();
     });
     this.peer.on("disconnected", function () {
-      console.log("Connection lost. Please reconnect");
+      dummylog("Connection lost. Please reconnect");
       this.connection.online = false;
       // Workaround for peer.reconnect deleting previous id
       this.id = this.connection.lastPeerId;
@@ -106,10 +109,10 @@ class Connection {
     this.peer.on("close", function () {
       this.connection.conn = null;
       this.connection.online = false;
-      console.log("Connection destroyed");
+      dummylog("Connection destroyed");
     });
     this.peer.on("error", function (err) {
-      console.log(err);
+      dummylog(err);
       alert("" + err);
     });
   }
@@ -150,17 +153,15 @@ class ClientConnection extends Connection {
     //this.conn.connection = this;
 
     this.conn.on("open", function () {
-      console.log("Connected to: " + this.peer);
-      if (host) {
-        setPortDivContent(this.connection.hostId, "Connected")
-      }
+      dummylog("Connected to: " + this.peer);
+      
       
       
       
       if (this.connection.addBuffer) {
         this.connection.buffer()
       } else {
-        console.log("connection by buffer")
+        dummylog("connection by buffer")
         this.send("yay")
       }
       
@@ -229,14 +230,14 @@ class HostConnection extends Connection {
   buffer(id) {
     this.clientConnection = new ClientConnection(id, false)
     this.clientConnection.init()
-    console.log("initing")
+    dummylog("initing")
   }
 
   receiveMultiplayerData(data, id) {
     if (data.split(" ")[0] == "buffer") {
       this.buffer(data.split(" ")[1])
     } if (data.split(" ")[0].includes("eval") && joining) {
-      console.log(data, data.split(" ")[1])
+      dummylog(data, data.split(" ")[1])
       
 
       //eval(data.split(" ")[1].replace("\"",""))
@@ -252,7 +253,6 @@ class HostConnection extends Connection {
 
 function receiveMultiplayerData(data, id) {
 
-  
   function runsinglePlayer(data) {
     var ids = [];
 
@@ -268,13 +268,15 @@ function receiveMultiplayerData(data, id) {
     
     var idIndex = findId(data.id)
     if (idIndex < 0) {
-      createClientEnemey(data.id);
-      
-      pushMsg(JSON.stringify([{"text":`${data.username} has probably joined the game`,"color":"#1b2469"}]))
+      createClientEnemey(data.id, id);
+      if (host) pushMsg(`<span style="color:#1b2469;"><b>${data.username}</b> has probably joined the game</span>`)
     }
     var idIndex = findId(data.id)
     if (idIndex >= 0) {
       var enemeyPlayer = Matter.Composite.get(engine.world,ids[idIndex],"body")
+
+      enemeyPlayer.controller.afkTicker = (new Date()).getTime()
+
       Matter.Body.setPosition(enemeyPlayer, data.position);
       Matter.Body.setVelocity(enemeyPlayer, data.velocity);
       enemeyPlayer.controller.alive = data.alive;
@@ -285,6 +287,7 @@ function receiveMultiplayerData(data, id) {
       enemeyPlayer.controller.bleeding = data.bleeding
 
       enemeyPlayer.controller.username = data.username
+      
 
       if (!data.alive) enemeyPlayer.controller.kill(false);
     }
@@ -305,7 +308,7 @@ function receiveMultiplayerData(data, id) {
   
 }
 
-function createClientEnemey(id) {
+function createClientEnemey(id, portId) {
   var en = new PlayerController(engine, {
     id:id,
     body: {
@@ -316,13 +319,14 @@ function createClientEnemey(id) {
     speed: 0.6,
   });
   enemeyPlayers.push(en)
+  en.portId = portId
   return en
 }
 
 function broadcastData(data) {
   for (let i = 0; i < hostConnections.length; i++) {
     const hostConn = hostConnections[i];
-    console.log()
+    dummylog()
     if (hostConn.clientConnection) if (hostConn.clientConnection.conn) hostConn.clientConnection.conn.send(JSON.stringify(data));
   }
 }
@@ -371,9 +375,23 @@ Matter.Composite.add(engine.world, enemeyPlayerComp);
 var hostConnections = [],
   clientConnection = undefined;
 document.body.onload = () => {
+  setNewClient(true)
+  if (host) document.getElementById("hostOptionsDiv").style.display = ""
+
+  document.getElementById("logDiv").onscroll = ()=>{
+    if (resetScrollTimeout != null) clearTimeout(resetScrollTimeout)
+    resetScrollTimeout = setTimeout(() => {
+        document.getElementById("logDiv").scroll(0, 100000000)
+        resetScrollTimeout = null
+    }, 3500);
+
+}
   setTimeout(() => {
     if (host) {
       player.name = "host"
+      setNewClient(false)
+      pushMsg("Host server ready")
+
     } else if (joining) {
       clientConnection = new ClientConnection(joining, true);
       clientConnection.init()
@@ -391,7 +409,7 @@ function runEvents(events) {
 }
 
 function setPortDivContent(id, content) {
-  document.getElementById(`clientPort-${id}`).children[2].textContent = content
+  document.getElementById(`clientPort-${id}`).children[3].textContent = content
 }
 function setNewClient(disabled) {
   document.getElementById("addClientBut").disabled = disabled

@@ -1,11 +1,10 @@
 function createElementFromHTML(htmlString) {
 	var div = document.createElement('div');
-	div.innerHTML = htmlString
+	div.innerHTML = htmlString.trim();
+  
 	// Change this to div.childNodes to support multiple top-level nodes.
-	var c = div.firstChild;
-	c.id = Math.random()
-    return c
-}
+	return div.firstChild;
+  }
 function angleDifference( angle1, angle2 )
 {	
 	angle1 = angle1*(Math.PI/180)

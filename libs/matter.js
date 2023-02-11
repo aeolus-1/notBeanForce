@@ -456,14 +456,14 @@ module.exports = Common;
     Common.logLevel = 1;
 
     /**
-     * Shows a `console.log` message only if the current `Common.logLevel` allows it.
+     * Shows a `log` message only if the current `Common.logLevel` allows it.
      * The message will be prefixed with 'matter-js' to make it easily identifiable.
      * @method log
      * @param ...objs {} The objects to log.
      */
     Common.log = function() {
         if (console && Common.logLevel > 0 && Common.logLevel <= 3) {
-            console.log.apply(console, ['matter-js:'].concat(Array.prototype.slice.call(arguments)));
+            log.apply(console, ['matter-js:'].concat(Array.prototype.slice.call(arguments)));
         }
     };
 

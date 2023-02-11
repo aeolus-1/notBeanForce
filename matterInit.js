@@ -14,7 +14,7 @@ Matter.Detector.canCollide = function (filterA, filterB) {
         ) || filterA.group == 0);*/
 }
 
-
+function dummylog(){}
 var Engine = Matter.Engine,
   Render = Matter.Render,
   Runner = Matter.Runner,

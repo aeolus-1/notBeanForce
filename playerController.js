@@ -25,6 +25,7 @@ class PlayerController {
             ...options,
         }
         this.options = options
+        this.afkTicker = (new Date()).getTime()
 
         this.username = options.username
 
@@ -59,7 +60,6 @@ class PlayerController {
             return verts//[...verts, v(-1*scale,2*scale)]
         })()
         var point = {...spawnPoints[randInt(0,spawnPoints.length-1)]}
-        console.log(point)
 
         this.body = Matter.Bodies.fromVertices(point.x+randInt(-10,10),point.y, verts, {
             id:options.id,
@@ -140,8 +140,8 @@ class PlayerController {
 
 
         var groundCollide = this.selfCollisionCheck()
-        //if (groundCollide.length>0)console.log(groundCollide[0].collisionFilter.group)
-        //console.log(groundCollide, this.checkingForCollisionsFor)
+        //if (groundCollide.length>0)log(groundCollide[0].collisionFilter.group)
+        //log(groundCollide, this.checkingForCollisionsFor)
         if (((groundCollide.length>0 && this.checkingForCollisionsFor != undefined))?(groundCollide[0].id != this.checkingForCollisionsFor.id):false || groundCollide.length<=0) {
             this.endCollisionCheck()
             this.checkingForCollisionsFor = undefined
@@ -201,11 +201,11 @@ class PlayerController {
     }
     updateControls(keys,preKeys){
     
-            //console.log(Matter.Composite.allBodies(engine.world))
+            //log(Matter.Composite.allBodies(engine.world))
             var playerCollisions = Matter.Query.collides(player.body, Matter.Composite.allBodies(engine.world).filter((a)=>{return a.id != this.body.id})),
                 onground = false
                 playerCollisions.forEach(col => {
-                    //console.log(Math.abs(angleDifference(getAngle(v(), col.normal)-180, 0)))
+                    //log(Math.abs(angleDifference(getAngle(v(), col.normal)-180, 0)))
                     if (!col.bodyA.particle) {
                         if (Math.abs(angleDifference(getAngle(v(), col.normal)-180, 0))<45) onground = true
                     }
@@ -215,7 +215,7 @@ class PlayerController {
             
             
     
-                //console.log(onground)
+                //log(onground)
                 if (onground && !this.preOnground) {
                     if (
                         this.body.velocity.y*100>1.9&&
@@ -378,17 +378,16 @@ class PlayerController {
         Matter.Body.setAngle(this.body, oldAngle)    }
 
 
-    kill(part=false, player=this) {
+    kill(part=false, shootBy=this) {
         if (this.alive) {
             //if (customOptions.permadeath) window.close()
             this.stabilsing = false
             this.options.speed = 0
             this.options.jumpHeight = 0
             this.alive = false
-            console.log("dieda")
-            if (player.body.id == this.body.id || true) {
+            if (player.body.id == this.body.id) {
                 
-                pushMsg(JSON.stringify([{"text":`${player.username}`,"color":"red"},{"text":" killed "},{"text":`${this.username}`,"color":"red"}]))
+                pushMsg(`<span style="color:red"><b>${shootBy.username}</b></span> killed <span style="color:red"><b>${this.username}</b></span>`)
             }
             if (part) {
                 particleController.createSquareExplosion(

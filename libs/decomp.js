@@ -509,7 +509,7 @@ function polygonQuickDecomp(polygon, result,reflexVertices,steinerPoints,delta,m
 
             // if there are no vertices to connect to, choose a point in the middle
             if (lowerIndex === (upperIndex + 1) % polygon.length) {
-                //console.log("Case 1: Vertex("+i+"), lowerIndex("+lowerIndex+"), upperIndex("+upperIndex+"), poly.size("+polygon.length+")");
+                //log("Case 1: Vertex("+i+"), lowerIndex("+lowerIndex+"), upperIndex("+upperIndex+"), poly.size("+polygon.length+")");
                 p[0] = (lowerInt[0] + upperInt[0]) / 2;
                 p[1] = (lowerInt[1] + upperInt[1]) / 2;
                 steinerPoints.push(p);
@@ -539,7 +539,7 @@ function polygonQuickDecomp(polygon, result,reflexVertices,steinerPoints,delta,m
                 }
             } else {
                 // connect to the closest point within the triangle
-                //console.log("Case 2: Vertex("+i+"), closestIndex("+closestIndex+"), poly.size("+polygon.length+")\n");
+                //log("Case 2: Vertex("+i+"), closestIndex("+closestIndex+"), poly.size("+polygon.length+")\n");
 
                 if (lowerIndex > upperIndex) {
                     upperIndex += polygon.length;
