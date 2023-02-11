@@ -69,6 +69,8 @@ var customOptions = {
   permadeath:false,
   gravity:1,
   shootingSpeed:1,
+  bouncingbullets:false,
+  health:1,
 }
 function runOptions(options) {
   customOptions = options
