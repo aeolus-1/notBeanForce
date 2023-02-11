@@ -47,7 +47,7 @@ class Connection {
       <b id="c${this.id}">${this.id}</b> - <a href="#" onclick="(function(){
         navigator.clipboard.writeText('https://aeolus-1.github.io/notBeanForce?join=${this.id}');
         return false;
-    })();return false;">Copy Link</a> (Good for one person only)<br>
+    })();return false;">[Copy Link]</a> (Good for one person only)<br>
       <span>Waiting ...</span>
       </div><br>
       `
