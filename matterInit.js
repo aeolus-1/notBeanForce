@@ -71,6 +71,7 @@ var customOptions = {
   shootingSpeed:1,
   bouncingbullets:false,
   health:1,
+  grenades:false,
 }
 function runOptions(options) {
   customOptions = options

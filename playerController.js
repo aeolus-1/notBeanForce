@@ -77,6 +77,10 @@ class PlayerController {
         this.engine.players = this.engine.players||[]
         this.engine.players.push(this)
 
+        this.visible = true
+        this.targetOpacity = 1
+        this.currentOpacity = 1
+
         this.shootTicker = 0
     
         this.jumpTicker = 0
@@ -113,6 +117,8 @@ class PlayerController {
         this.shield -= timeDelta
         this.shootTicker -= timeDelta*customOptions.shootingSpeed
         this.updateControls(keys, prekeys)
+
+        
         
 
         if (this.ducking && !this.preDucking && !this.isDucking) {
@@ -142,10 +148,15 @@ class PlayerController {
         }
         //Matter.Common.set(this.body, "angle", 0)
         //Matter.Common.set(this.body, "angularVelocity", lerp(this.body.angularVelocity,0,0.5))
+        
+        this.currentOpacity = clamp(this.currentOpacity-(Math.sign(this.currentOpacity-this.targetOpacity)*0.12),0,1)
+        this.body.render.opacity = 1
         if (this.shield>0) {
             var interval = 100
-            this.body.render.opacity = (((new Date()).getTime()%interval*2)>interval)?1:0.5
-        } else this.body.render.opacity = 1
+            this.body.render.opacity *= (((new Date()).getTime()%interval*2)>interval)?1:0.5
+        } 
+        this.body.render.opacity *= this.currentOpacity
+
 
 
         var groundCollide = this.selfCollisionCheck()
@@ -349,7 +360,7 @@ class PlayerController {
                             
                         },
                         {
-                            halfLife:5,
+                            halfLife:15,
                             ignoreGravity:true,
                             render:{
                                 fillStyle:"#000"
@@ -357,8 +368,8 @@ class PlayerController {
                         }
                     )
             }
-            if (keys["c"] && !preKeys["c"] && player.hasGrenade>=1) {
-                player.hasGrenade = 0
+            if (keys["c"] && !preKeys["c"] && (this.hasGrenade>=1||this.body.id!=player.body.id) && customOptions.grenades) {
+                this.hasGrenade = 0
                 var dir = Math.sign(this.body.velocity.x)
                 addGrenade(v(this.body.position.x+(dir*20),this.body.position.y), dir, this)
             }

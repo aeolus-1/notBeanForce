@@ -4,7 +4,7 @@ var camera = v(),
       min: v(0, 0),
       max: v(4076, 2200),
     },
-      {
+    {
       min: v(0, -300),
       max: v(3000, 1500),
     },
@@ -12,7 +12,7 @@ var camera = v(),
       min: v(-100, -500),
       max: v(4800, 2900),
     },
-  ][levelSelection-1]
+  ][levelSelection - 1];
 
 Matter.Events.on(render, "beforeRender", function () {
   let center = v(-render.canvas.width / 4, -render.canvas.height / 4),
@@ -82,49 +82,43 @@ Matter.Events.on(render, "afterRender", function () {
   var ctx = render.context,
     width = 100;
 
-    particleController.renderParticles()
-
-  
+  particleController.renderParticles();
 
   function renderHealthBar(pos, t) {
     //t = (((new Date()).getTime())/1000)%1
     //log(t)
 
-    t = clamp(t, 0, 1)
+    t = clamp(t, 0, 1);
 
-    var size = 25
-    
-    ctx.beginPath()
-    ctx.moveTo(pos.x-size,pos.y)
-    ctx.arc(pos.x, pos.y, size, Math.PI, 0)
-    ctx.strokeStyle = "#f00"
-    ctx.lineWidth = 7
-    ctx.stroke()
-    ctx.closePath()
-    ctx.beginPath()
-    ctx.moveTo(pos.x-size,pos.y)
-    ctx.arc(pos.x, pos.y, size, Math.PI, Math.PI+(Math.PI*t))
-    ctx.strokeStyle = "#0f0"
-    ctx.lineWidth = 7
-    ctx.stroke()
-    ctx.closePath()
+    var size = 25;
 
-    if (player.hasGrenade) {
-      var pos = v(
-        player.body.position.x+35,
-        player.body.position.y-60
-      ),
-        rad = 8
-      ctx.beginPath()
-      ctx.moveTo(pos.x, pos.y)
-      ctx.arc(pos.x, pos.y, rad, 0, (Math.PI*2)*player.hasGrenade)
-      ctx.lineTo(pos.x, pos.y)
+    ctx.beginPath();
+    ctx.moveTo(pos.x - size, pos.y);
+    ctx.arc(pos.x, pos.y, size, Math.PI, 0);
+    ctx.strokeStyle = "#f00";
+    ctx.lineWidth = 7;
+    ctx.stroke();
+    ctx.closePath();
+    ctx.beginPath();
+    ctx.moveTo(pos.x - size, pos.y);
+    ctx.arc(pos.x, pos.y, size, Math.PI, Math.PI + Math.PI * t);
+    ctx.strokeStyle = "#0f0";
+    ctx.lineWidth = 7;
+    ctx.stroke();
+    ctx.closePath();
 
-      ctx.fillStyle = "#f00"
-      ctx.fill()
-      ctx.closePath()
+    if (player.hasGrenade && customOptions.grenades) {
+      var pos = v(player.body.position.x + 35, player.body.position.y - 60),
+        rad = 8;
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+      ctx.arc(pos.x, pos.y, rad, 0, Math.PI * 2 * player.hasGrenade);
+      ctx.lineTo(pos.x, pos.y);
+
+      ctx.fillStyle = "#f00";
+      ctx.fill();
+      ctx.closePath();
     }
-    
   }
 
   var img = document.getElementById("gun");
@@ -145,41 +139,41 @@ Matter.Events.on(render, "afterRender", function () {
     height
   );
 
-  
-
   ctx.restore();
   if (player.displayRespawnMessage) {
     var text = "Press [Enter] to Respawn",
-      width = ctx.measureText(text).width
-      ctx.save()
-      ctx.translate(camera.x, camera.y)
-      ctx.fillStyle = "#000"
-    ctx.fillText(text, -(width/2), 0)//player.body.position.x-(width/2),player.body.position.y-150)
-  ctx.restore()
+      width = ctx.measureText(text).width;
+    ctx.save();
+    ctx.translate(camera.x, camera.y);
+    ctx.fillStyle = "#000";
+    ctx.fillText(text, -(width / 2), 0); //player.body.position.x-(width/2),player.body.position.y-150)
+    ctx.restore();
   }
-  var fontSize = 30
-  ctx.font = `${fontSize}px Comic Sans MS`
-    var width = ctx.measureText(player.username).width/2
+  var fontSize = 30;
+  ctx.font = `${fontSize}px Comic Sans MS`;
+  var width = ctx.measureText(player.username).width / 2;
 
-  ctx.fillStyle = "#000"
-  ctx.fillText(player.username, 
-    player.body.position.x-width,
-    player.body.position.y-100,
-  )
-  renderHealthBar(v(
-    player.body.position.x,
-    player.body.position.y-40
-  ), player.stats.health)
-    for (let i = 0; i < enemeyPlayers.length; i++) {
-      const enPlayer = enemeyPlayers[i];
-      direction = Math.sign(enPlayer.body.velocity.x);
+  ctx.fillStyle = "#000";
+  ctx.fillText(
+    player.username,
+    player.body.position.x - width,
+    player.body.position.y - 100
+  );
+  renderHealthBar(
+    v(player.body.position.x, player.body.position.y - 40),
+    player.stats.health
+  );
+  for (let i = 0; i < enemeyPlayers.length; i++) {
+    const enPlayer = enemeyPlayers[i];
+    ctx.save()
+    ctx.globalAlpha = enPlayer.body.render.opacity
+    direction = Math.sign(enPlayer.body.velocity.x);
 
     ctx.save();
-    ctx.translate(enPlayer.body.position.x,enPlayer.body.position.y)
-    ctx.scale(direction, 1)
-    ctx.translate(-enPlayer.body.position.x,-enPlayer.body.position.y)
+    ctx.translate(enPlayer.body.position.x, enPlayer.body.position.y);
+    ctx.scale(direction, 1);
+    ctx.translate(-enPlayer.body.position.x, -enPlayer.body.position.y);
 
-    
     ctx.drawImage(
       img,
       enPlayer.body.position.x,
@@ -187,22 +181,22 @@ Matter.Events.on(render, "afterRender", function () {
       width,
       height
     );
-ctx.restore()
-    var fontSize = 30
-  ctx.font = `${fontSize}px Comic Sans MS`
-    var width = ctx.measureText(enPlayer.username).width/2
+    ctx.restore();
+    var fontSize = 30;
+    ctx.font = `${fontSize}px Comic Sans MS`;
+    var width = ctx.measureText(enPlayer.username).width / 2;
 
-  ctx.fillStyle = "#000"
-  ctx.fillText(enPlayer.username, 
-    enPlayer.body.position.x-width,
-    enPlayer.body.position.y-100,
-  )
+    ctx.fillStyle = "#000";
+    ctx.fillText(
+      enPlayer.username,
+      enPlayer.body.position.x - width,
+      enPlayer.body.position.y - 100
+    );
+    
+    ctx.restore()
+  }
 
-    }
-
-    renderLog(ctx)
-  
-
+  renderLog(ctx);
 
   //render.context.fillRect(player.body.position.x, player.body.position.y, 100,100)
 });

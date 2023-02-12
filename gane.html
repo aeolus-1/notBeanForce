@@ -30,7 +30,7 @@
       }
       .textblock {
         max-height: 64px;
-        max-width: 550px;
+        max-width: 700px;
         width:550px;
         overflow: scroll;
         opacity: 70%;
@@ -57,6 +57,7 @@ var urlInfo = getURLInfo(location.href)
     </script>
     <script src="matterInit.js"></script>
     <script src="textParser.js"></script>
+    <script src="sightClipping.js"></script>
     <img src="m16.png" style="display: none" id="gun">
     <script>
       var options = localStorage.getItem("customOptions")
@@ -94,20 +95,23 @@ var enemeyPreKeys = {}
         player.update(keys, prekeys)
         
         for (let i = 0; i < enemeyPlayers.length; i++) {
-          const player = enemeyPlayers[i];
-          player.update()
-          var inactiveFor = (new Date()).getTime()-player.afkTicker
+          const enemyPlayer = enemeyPlayers[i];
+          enemyPlayer.update()
+          console.log(runSightClip(player.body.position, enemyPlayer))
+          enemyPlayer.targetOpacity = (!runSightClip(player.body.position, enemyPlayer))?1:0
+
+          var inactiveFor = (new Date()).getTime()-enemyPlayer.afkTicker
           if (inactiveFor > 5000) {
-            Matter.Composite.remove(engine.world, player.body)
+            Matter.Composite.remove(engine.world, enemyPlayer.body)
             enemeyPlayers.splice(i, 1)
-            console.log("kicked",player.portId)
+            console.log("kicked",enemyPlayer.portId)
             for (let i = 0; i < hostConnections.length; i++) {
               const conn = hostConnections[i];
-              if (conn.lastPeerId == player.portId) {
+              if (conn.lastPeerId == enemyPlayer.portId) {
                 conn.conn.close()
-                setPortDivContent(player.portId, "Disconnected")
+                setPortDivContent(enemyPlayer.portId, "Disconnected")
                 console.log("closing port")
-                if (host) pushMsg(`<span style='color:lightred;'><b>${player.username}</b> has disconnected</span>`)
+                if (host) pushMsg(`<span style='color:lightred;'><b>${enemyPlayer.username}</b> has disconnected</span>`)
               }
             }
           }
@@ -121,8 +125,15 @@ var enemeyPreKeys = {}
           window.clientConnection.updateHost()
           logEvents = []
         }
-
-        if (player.body.position.y > 3300) respawn()
+        var offScreenRange = 500
+        if (
+          player.body.position.y > cameraBounds.max.y+offScreenRange ||
+          player.body.position.x > cameraBounds.max.x+offScreenRange ||
+          player.body.position.y < cameraBounds.min.y-offScreenRange ||
+          player.body.position.x < cameraBounds.min.x-offScreenRange
+        ) {
+          respawn()
+        }
         if (player.alive) {
           player.displayRespawnMessage = false
           player.hasGrenade = clamp(player.hasGrenade+0.00066, 0, 1)
@@ -214,6 +225,7 @@ function addBody(bod) {
       var point = {...spawnPoints[randInt(0,spawnPoints.length-1)]}
       player.displayRespawnMessage = false
       Matter.Body.setPosition(player.body,point)
+      Matter.Body.setVelocity(player.body,v())
       if (customOptions.permadeath) {
         window.close()
       }

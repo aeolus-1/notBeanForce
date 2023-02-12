@@ -12,7 +12,7 @@ class ParticleController {
         for (let i = 0; i < this.particles.length; i++) {
             var part = this.particles[i];
             part.halfLife -= this.engine.timing.lastElapsed
-             
+
             if (part.halfLife <= 0 || part.rad <= 0) {
                 Matter.Composite.remove(this.particlesComp, part)
                 this.particles.splice(i, 1)
@@ -20,6 +20,9 @@ class ParticleController {
 
             if (part.type == "display") {
                 part.rad = clamp(part.rad-(1*part.decayRate), 0, Infinity)
+            } else {
+                part.render.opacity = clamp(part.halfLife/10,0,1)
+
             }
                 
         }

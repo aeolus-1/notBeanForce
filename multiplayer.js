@@ -4,7 +4,7 @@ var status = location.href.split("?")[1],
   joining = urlInfo.join||false//status.includes("join") ? status.split("=")[1] : false,
   online = false,
 
-  username = urlInfo.userName||"unnamed"
+  username = decodeURI(urlInfo.userName||"unnamed")
   //if (username != undefined) {username = username.split("=")[1]} else {username = prompt("Username?")}
 
 
@@ -297,6 +297,7 @@ function receiveMultiplayerData(data, id) {
     runsinglePlayer(data.player)
     setPortDivContent(id, `Connected - ${data.player.username}`)
   } else {
+    if (data.customOptions!=undefined) runOptions(data.customOptions)
     log = data.log
     data = data.players
 
@@ -356,6 +357,7 @@ function getMultiplayerData() {
   return {
     players:data,
     log:log,
+    customOptions:customOptions
   }
 }
 

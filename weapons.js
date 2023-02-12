@@ -10,9 +10,10 @@ function runBullets() {
             a:(-getAngle(v(), bul.velocity)-90)*(Math.PI/180),
             d:getDst(v(), bul.velocity)
         }
+        var mag = 25
         Matter.Body.setVelocity(bul, v(
-            Math.cos(polarVelocity.a)*20,
-            Math.sin(polarVelocity.a)*20
+            Math.cos(polarVelocity.a)*mag,
+            Math.sin(polarVelocity.a)*mag
         ))
         var hits = Matter.Query.collides(bul, [...engine.world.bodies,...playersComp.bodies])//.filter(a=>{return a.bodyB.id!=bul.id})
         if (hits.length>0) {
@@ -159,7 +160,7 @@ function addGrenade(pos, dir, player) {
 
         density:1,
 
-        restitution:0.7,
+        restitution:0.45,
 
         bounces:0,
     })
@@ -206,8 +207,8 @@ function explodeGrenade(gren) {
             var hitMag = clamp(1-clamp(dst/size,0,1),0,1)
             pl.damage(0.6*hitMag)
             var hitAngle = (-getAngle(pl.body.position, gren.position)+90)*(Math.PI/180),
-                mag = clamp(2.5*hitMag, 0, 5)
-            Matter.Body.applyForce(pl.body, v(0,0), v(
+                mag = clamp(10*hitMag, 0, 5)
+            Matter.Body.applyForce(pl.body, pl.body.position, v(
                 Math.cos(hitAngle)*mag,
                 Math.sin(hitAngle)*mag,
             ))
