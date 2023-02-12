@@ -282,7 +282,7 @@ function receiveMultiplayerData(data, id) {
       enemeyPlayer.controller.alive = data.alive;
       enemeyPlayer.controller.preKeys = enemeyPlayer.controller.keys
       enemeyPlayer.controller.keys = data.keys
-      enemeyPlayer.controller.stabilsing = data.stabilsing||true
+      enemeyPlayer.controller.stabilsing = data.stabilsing
       enemeyPlayer.controller.ducking = data.ducking
       enemeyPlayer.controller.bleeding = data.bleeding
 

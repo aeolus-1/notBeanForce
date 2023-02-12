@@ -123,7 +123,7 @@ Matter.Events.on(render, "afterRender", function () {
 
   var img = document.getElementById("gun");
   var height = (img.height / img.width) * width,
-    direction = Math.sign(player.body.velocity.x);
+    direction = player.direction
   ctx.save();
   ctx.translate(player.body.position.x, player.body.position.y + height / 2);
   ctx.scale(1 * direction, 1);
@@ -167,7 +167,7 @@ Matter.Events.on(render, "afterRender", function () {
     const enPlayer = enemeyPlayers[i];
     ctx.save()
     ctx.globalAlpha = enPlayer.body.render.opacity
-    direction = Math.sign(enPlayer.body.velocity.x);
+    direction = enPlayer.direction
 
     ctx.save();
     ctx.translate(enPlayer.body.position.x, enPlayer.body.position.y);

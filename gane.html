@@ -226,6 +226,7 @@ function addBody(bod) {
       player.displayRespawnMessage = false
       Matter.Body.setPosition(player.body,point)
       Matter.Body.setVelocity(player.body,v())
+      pushMsg(`<span style="color:red;"><b>${player.username}</b> self destructed</span>`)
       if (customOptions.permadeath) {
         window.close()
       }

@@ -77,6 +77,8 @@ class PlayerController {
         this.engine.players = this.engine.players||[]
         this.engine.players.push(this)
 
+        this.direction = 0
+
         this.visible = true
         this.targetOpacity = 1
         this.currentOpacity = 1
@@ -326,11 +328,13 @@ class PlayerController {
             }
             if (keys.a || keys.arrowleft) {
                 Matter.Body.setVelocity(this.body, v((baseVel)-speed, this.body.velocity.y))
+                this.direction = -1
                 runP(1)
                 
             }
             if (keys.d || keys.arrowright) {
                 Matter.Body.setVelocity(this.body, v((baseVel)+speed, this.body.velocity.y))
+                this.direction = 1
                 runP(-1)
             }
 
@@ -339,15 +343,15 @@ class PlayerController {
                 
             
             if (keys[" "] && this.shootTicker <= 0) {
-                this.shootTicker = 250
-                var pos = v(
-                    this.body.position.x+(Math.sign(this.body.velocity.x)*100),
+                this.shootTicker = 200
+                var dir = this.direction,
+                                pos = v(
+                    this.body.position.x+(dir*100),
                     this.body.position.y
-                ),
-                dir = Math.sign(this.body.velocity.x)
+                )
                 addBullet(
                     pos
-                    ,Math.sign(this.body.velocity.x),this)
+                    ,dir,this)
 
                     particleController.createSquareExplosion(
                         pos,
@@ -370,8 +374,8 @@ class PlayerController {
             }
             if (keys["c"] && !preKeys["c"] && (this.hasGrenade>=1||this.body.id!=player.body.id) && customOptions.grenades) {
                 this.hasGrenade = 0
-                var dir = Math.sign(this.body.velocity.x)
-                addGrenade(v(this.body.position.x+(dir*20),this.body.position.y), dir, this)
+                var dir = this.direction
+                addGrenade(v(this.body.position.x+(dir*20)+20,this.body.position.y), dir, this)
             }
             
             
