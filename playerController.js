@@ -338,11 +338,11 @@ class PlayerController {
                 runP(-1)
             }
 
-            if (keys["shift"] && !preKeys["shift"]) this.ducking = true
-            if (!keys["shift"] && preKeys["shift"]) this.ducking = false
+            if (keys["shift"] && !preKeys["shift"] && this.alive) this.ducking = true
+            if (!keys["shift"] && preKeys["shift"] && this.alive) this.ducking = false
                 
             
-            if (keys[" "] && this.shootTicker <= 0) {
+            if (keys[" "] && this.shootTicker <= 0 && this.alive) {
                 this.shootTicker = 200
                 var dir = this.direction,
                                 pos = v(
@@ -372,7 +372,7 @@ class PlayerController {
                         }
                     )
             }
-            if (keys["c"] && !preKeys["c"] && (this.hasGrenade>=1||this.body.id!=player.body.id) && customOptions.grenades) {
+            if (keys["c"] && !preKeys["c"] && (this.hasGrenade>=1||this.body.id!=player.body.id) && customOptions.grenades && this.alive) {
                 this.hasGrenade = 0
                 var dir = this.direction
                 addGrenade(v(this.body.position.x+(dir*20)+20,this.body.position.y), dir, this)
