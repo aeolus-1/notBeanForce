@@ -339,7 +339,7 @@ class PlayerController {
             }
 
             if (keys["shift"] && !preKeys["shift"] && this.alive) this.ducking = true
-            if (!keys["shift"] && preKeys["shift"] && this.alive) this.ducking = false
+            if (!keys["shift"] && preKeys["shift"] && this.alsoundive) this.ducking = false
                 
             
             if (keys[" "] && this.shootTicker <= 0 && this.alive) {
