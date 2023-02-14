@@ -24,6 +24,7 @@ class SoundController {
             hit: ["hit (1).wav","hit (2).wav","hit (3).wav",],
             hitGround: ["hitGround.wav"],
             death: ["death.mp3"],
+            teleport: ["teleport.wav"]
         }[soundName]
         if (link != undefined) {
             var link = link[randInt(0,link.length-1)],
