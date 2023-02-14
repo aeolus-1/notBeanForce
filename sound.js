@@ -1,3 +1,13 @@
+/*
+====Sounds====
+gun,
+(shoot)grenade,
+explosion,
+hit,
+hitGround,
+teleport,
+*/
+
 class SoundController {
     static playerSound(soundName) {
         var link = {

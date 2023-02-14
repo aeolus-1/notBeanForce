@@ -343,6 +343,7 @@ class PlayerController {
                 
             
             if (keys[" "] && this.shootTicker <= 0 && this.alive) {
+                SoundController.playerSound("gun")
                 this.shootTicker = 200
                 var dir = this.direction,
                                 pos = v(
@@ -373,6 +374,7 @@ class PlayerController {
                     )
             }
             if (keys["c"] && !preKeys["c"] && (this.hasGrenade>=1||this.body.id!=player.body.id) && customOptions.grenades && this.alive) {
+                SoundController.playerSound("gun")
                 this.hasGrenade = 0
                 var dir = this.direction
                 addGrenade(v(this.body.position.x+(dir*20)+20,this.body.position.y), dir, this)
