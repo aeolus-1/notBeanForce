@@ -269,8 +269,10 @@ class PlayerController {
                 }
                 if (onground) {
                     this.jumps = 2
-                    console.log(this.falling)
-                    if (this.falling > 70) SoundController.playerSound("hitGround")
+                    if (this.falling > 10) {
+                        console.log(clamp(this.falling/200, 0, 1)*0.01)
+                        SoundController.playerSound("hitGround", clamp(this.falling/100, 0, 1))
+                    }
                     this.falling = 0
                     
                 }
