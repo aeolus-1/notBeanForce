@@ -27,12 +27,12 @@ function runBullets() {
                     Matter.Composite.remove(bulletsComp, bul)
                     bullets.splice(i, 1)
                     hits[0].bodyA.owner.stats.killCount += 1
-                    SoundController.playerSound("hit")
+                    soundController.playerSound("hit")
                 } else {
                     if (bul.bounces > (customOptions.bouncingbullets)?10:0) {
                         Matter.Composite.remove(bulletsComp, bul)
                         bullets.splice(i, 1)
-                        SoundController.playerSound("hit")
+                        soundController.playerSound("hit")
                     }
                     particleController.createSquareExplosion(
                         bul.position,
@@ -233,7 +233,7 @@ function explodeGrenade(gren) {
         }, randInt(0, 50));
         
     }
-    SoundController.playerSound("explosion")
+    soundController.playerSound("explosion")
         
     
 }

@@ -271,7 +271,7 @@ class PlayerController {
                     this.jumps = 2
                     if (this.falling > 10) {
                         console.log(clamp(this.falling/200, 0, 1)*0.01)
-                        SoundController.playerSound("hitGround", clamp(this.falling/100, 0, 1))
+                        soundController.playerSound("hitGround", clamp(this.falling/100, 0, 1))
                     }
                     this.falling = 0
                     
@@ -282,7 +282,7 @@ class PlayerController {
                 this.jumps -= 1
                 this.jumpTicker = 0
                 Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -8*this.options.jumpHeight))
-                SoundController.playerSound("jump")
+                soundController.playerSound("jump")
             }
             if (!onground && (keys.w || keys.arrowup) && this.jumpTicker < 20 && this.body.velocity.y < 0) {
                 Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -8*this.options.jumpHeight))
@@ -343,11 +343,11 @@ class PlayerController {
             }
 
             if (keys["shift"] && !preKeys["shift"] && this.alive) this.ducking = true
-            if (!keys["shift"] && preKeys["shift"] && this.alsoundive) this.ducking = false
+            if (!keys["shift"] && preKeys["shift"] && this.alive) this.ducking = false
                 
             
             if (keys[" "] && this.shootTicker <= 0 && this.alive) {
-                SoundController.playerSound("gun")
+                soundController.playerSound("gun")
                 this.shootTicker = 200
                 var dir = this.direction,
                                 pos = v(
@@ -378,7 +378,7 @@ class PlayerController {
                     )
             }
             if (keys["c"] && !preKeys["c"] && (this.hasGrenade>=1||this.body.id!=player.body.id) && customOptions.grenades && this.alive) {
-                SoundController.playerSound("grenade")
+                soundController.playerSound("grenade")
                 this.hasGrenade = 0
                 var dir = this.direction
                 addGrenade(v(this.body.position.x+(dir*20)+20,this.body.position.y), dir, this)
@@ -410,7 +410,8 @@ class PlayerController {
             this.body.position.x,
             this.body.position.y+(this.options.body.scale*0)
         ))
-        Matter.Body.setAngle(this.body, oldAngle)    }
+        Matter.Body.setAngle(this.body, oldAngle)    
+    }
 
 
     kill(part=false, shootBy=this) {
@@ -422,7 +423,7 @@ class PlayerController {
             if (customOptions.permadeath) {
                 window.close()
             }
-            SoundController.playerSound("death")
+            soundController.playerSound("death")
             //if (customOptions.permadeath) window.close()
             this.stabilsing = false
             this.options.speed = 0
