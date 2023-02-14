@@ -1,5 +1,10 @@
-var log = []
+var log = [],
+    preLog = []
 function renderLog() {
+    if (log[log.length-1] != preLog[log.length-1]) {
+        //console.log("yay",log[log.length-1].text.includes("probably"))
+        soundController.playerSound("join", 1)
+    }
     /*ctx.translate(camera.x-(render.canvas.width*0.75), camera.y-(render.canvas.height*0.75))
     //ctx.fillRect(0,0, 100, 100)
     for (let i = 0; i < log.length; i++) {
@@ -22,6 +27,16 @@ function renderLog() {
     if (resetScrollTimeout == null) {
         document.getElementById("logDiv").scroll(0, 100000000)
     }
+
+    var lbDiv = document.getElementById("leaderBoardDiv")
+    lbDiv.innerHTML = ""
+
+    var currentPlayers = [player, ...enemeyPlayers]
+    for (let i = 0; i < currentPlayers.length; i++) {
+        const pl = currentPlayers[i];
+        lbDiv.appendChild(createElementFromHTML(`<div>${pl.username}: ${pl.stats.kills}</div>`))
+    }
+    preLog = [...log]
 }
 
 function pushMsg(text) {

@@ -60,7 +60,7 @@ class Teleporter {
                         body.endPoint.position.y+relativePosition.y,
                         )
                     )
-                    soundController.playerSound("teleport")
+                    soundController.emitSoundFromPosition("teleport", body.endPoint.position, player.body.position)
                     this.portalTicker[collision.bodyB.id] = 80
                 }
             }

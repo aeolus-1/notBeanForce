@@ -28,6 +28,13 @@
         max-height: 300px;
         overflow: scroll;
       }
+      #leaderBoardDiv {
+        font-family: "Comic Sans MS";
+        font-size: 20px;
+        margin: 7px;
+        max-height: 300px;
+        overflow: scroll;
+      }
       .textblock {
         max-height: 64px;
         max-width: 700px;
@@ -183,7 +190,7 @@ function addBody(bod) {
 
 <script>
     const particleController = new ParticleController(engine)
-    var player = new PlayerController(engine,{
+    var player = new PlayerController(engine,player,{
         body:{
             scale:15,
             density:0.01,
@@ -235,6 +242,12 @@ function addBody(bod) {
     }
     
 </script>
+<div id="leaderBoardDiv" style="position:absolute;z-index:100;top:0px;right:0px;">
+
+</div>
+<div id="logDiv" style="position:absolute;z-index:100;bottom:0px;">
+
+</div>
 <div style="position:absolute;z-index:100;top:0px;">
   <a href="index.html">⇱ Main Menu</a><br><br>
   <div style="display: none" id="hostOptionsDiv">
@@ -246,9 +259,7 @@ function addBody(bod) {
 
   
 </div>
-<div id="logDiv" style="position:absolute;z-index:100;bottom:0px;">
 
-</div>
 
 
   </body>

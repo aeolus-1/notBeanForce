@@ -134,7 +134,7 @@ Matter.Events.on(render, "afterRender", function () {
   ctx.drawImage(
     img,
     player.body.position.x,
-    player.body.position.y,
+    player.body.position.y-13.5,
     width,
     height
   );
@@ -177,7 +177,7 @@ Matter.Events.on(render, "afterRender", function () {
     ctx.drawImage(
       img,
       enPlayer.body.position.x,
-      enPlayer.body.position.y,
+      enPlayer.body.position.y-50,
       width,
       height
     );
@@ -190,7 +190,7 @@ Matter.Events.on(render, "afterRender", function () {
     ctx.fillText(
       enPlayer.username,
       enPlayer.body.position.x - width,
-      enPlayer.body.position.y - 100
+      enPlayer.body.position.y - 13.5
     );
     
     ctx.restore()

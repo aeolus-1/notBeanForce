@@ -2,8 +2,9 @@ var playersComp = Matter.Composite.create()
 Matter.Composite.add(engine.world, playersComp)
 
 class PlayerController {
-    constructor(engine, options={}) {
+    constructor(engine, owner=this, options={}) {
         this.engine = engine
+        this.owner = owner
         options = {
             body:{
                 scale:15,
@@ -64,7 +65,9 @@ class PlayerController {
         this.body = Matter.Bodies.fromVertices(point.x+randInt(-10,10),point.y, verts, {
             id:options.id,
             density:options.body.density,
-            frictionAir:0.01,
+            frictionAir:0.026,
+            friction:0.5,
+            frictionStatic:1,
             controller:this,
 
             
@@ -110,7 +113,9 @@ class PlayerController {
 
         this.stats = {
             health:1,
+            kills:0,
         }
+
     }
     update(keys=this.keys, prekeys=this.preKeys){
         this.jumpTicker += timeDelta/16
@@ -270,8 +275,7 @@ class PlayerController {
                 if (onground) {
                     this.jumps = 2
                     if (this.falling > 10) {
-                        console.log(clamp(this.falling/200, 0, 1)*0.01)
-                        soundController.playerSound("hitGround", clamp(this.falling/100, 0, 1))
+                        this.emitSound("hitGround", clamp(this.falling/100, 0, 1))
                     }
                     this.falling = 0
                     
@@ -281,11 +285,12 @@ class PlayerController {
             if (((keys.w && !preKeys.w)||(keys.arrowup && !preKeys.arrowup)) && this.jumps > 0) {
                 this.jumps -= 1
                 this.jumpTicker = 0
-                Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -8*this.options.jumpHeight))
-                soundController.playerSound("jump")
+                Matter.Body.setPosition(this.body, v(this.body.position.x, this.body.position.y-5))
+                Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -2*this.options.jumpHeight))
+                this.emitSound("jump")
             }
-            if (!onground && (keys.w || keys.arrowup) && this.jumpTicker < 20 && this.body.velocity.y < 0) {
-                Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -8*this.options.jumpHeight))
+            if (!onground && (keys.w || keys.arrowup) && this.jumpTicker < 10 && this.body.velocity.y < 0) {
+                Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -15*this.options.jumpHeight))
             }
     
     
@@ -305,7 +310,7 @@ class PlayerController {
             }
     
     
-            var speed = ((onground)?3.5:0.6)*this.options.speed,
+            var speed = ((onground)?3.5:0.4)*this.options.speed*1.6,
                 baseVel = onground?(this.body.velocity.x*0.75):this.body.velocity.x
 
             var runP = (direction) => {
@@ -347,7 +352,7 @@ class PlayerController {
                 
             
             if (keys[" "] && this.shootTicker <= 0 && this.alive) {
-                soundController.playerSound("gun")
+                this.emitSound("gun")
                 this.shootTicker = 200
                 var dir = this.direction,
                                 pos = v(
@@ -355,7 +360,10 @@ class PlayerController {
                     this.body.position.y
                 )
                 addBullet(
-                    pos
+                    v(
+                        pos.x,
+                        pos.y-8,
+                    )
                     ,dir,this)
 
                     particleController.createSquareExplosion(
@@ -378,7 +386,7 @@ class PlayerController {
                     )
             }
             if (keys["c"] && !preKeys["c"] && (this.hasGrenade>=1||this.body.id!=player.body.id) && customOptions.grenades && this.alive) {
-                soundController.playerSound("grenade")
+                this.emitSound("grenade")
                 this.hasGrenade = 0
                 var dir = this.direction
                 addGrenade(v(this.body.position.x+(dir*20)+20,this.body.position.y), dir, this)
@@ -423,8 +431,8 @@ class PlayerController {
             if (customOptions.permadeath) {
                 window.close()
             }
-            soundController.playerSound("death")
-            //if (customOptions.permadeath) window.close()
+            this.emitSound("death")
+            if (customOptions.permadeath) window.close()
             this.stabilsing = false
             this.options.speed = 0
             this.options.jumpHeight = 0
@@ -484,6 +492,11 @@ class PlayerController {
 
     shoot() {
 
+    }
+
+
+    emitSound(name) {
+        soundController.emitSoundFromPosition(name, this.owner.body.position, this.body.position)
     }
 }
 

@@ -75,5 +75,5 @@ var customOptions = {
 }
 function runOptions(options) {
   customOptions = options
-  engine.gravity.scale = options.gravity*0.002
+  engine.gravity.scale = options.gravity*0.0045
 }

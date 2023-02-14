@@ -310,7 +310,7 @@ function receiveMultiplayerData(data, id) {
 }
 
 function createClientEnemey(id, portId) {
-  var en = new PlayerController(engine, {
+  var en = new PlayerController(engine, player, {
     id:id,
     body: {
       scale: 15,

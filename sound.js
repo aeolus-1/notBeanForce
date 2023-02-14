@@ -24,7 +24,8 @@ class SoundController {
             hit: ["hit (1).wav","hit (2).wav","hit (3).wav",],
             hitGround: ["hitGround.wav"],
             death: ["death.mp3"],
-            teleport: ["teleport.wav"]
+            teleport: ["teleport.wav"],
+            join: ["join.mp3"],
         },
         this.audios = {}
         var soundIds = Object.keys(this.sounds)
@@ -47,19 +48,28 @@ class SoundController {
         
     }
     playSound(queue, volume) {
-        queue.audios[queue.pointer].volume = volume
-        queue.audios[queue.pointer].play()
+        var audio = queue.audios[queue.pointer]
+        audio.volume = volume
+        audio.play()
         queue.pointer = stopOverflow(queue.pointer+1, queue.audios.length-1)
-        
+        return audio
     }
-    playerSound(soundName, magnitude=1) {
+    playerSound(soundName, volume=1) {
         var link = this.audios[soundName]
         if (link != undefined) {
             var link = link[randInt(0,link.length-1)]
 
-            this.playSound(link, magnitude)
+            return this.playSound(link, volume)
             
         }  
+        return {stop:function(){}}
+    }
+    emitSoundFromPosition(name, pos1, pos2, volume=1) {
+        
+        var dst = getDst(pos1, pos2),
+            maxDst = 3000,
+            localVolume = 1-clamp(dst/maxDst, 0, 1)
+        this.playerSound(name, localVolume*volume)
     }
 }
 
