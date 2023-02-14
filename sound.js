@@ -17,7 +17,7 @@ class SoundController {
                 "shoot3",
             ]*/
             jump: ["jump.wav"],
-            gun: ["laserShoot.wav"],
+            gun: ["laserShoot.wav", "laserShoot (1).wav", "laserShoot (2).wav", "laserShoot (3).wav", "laserShoot (4).wav", "laserShoot (5).wav", "laserShoot (6).wav"],
             explosion: ["explosion.wav"]
         }[soundName]
         var link = link[randInt(0,link.length-1)],
