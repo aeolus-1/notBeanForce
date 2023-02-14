@@ -269,8 +269,9 @@ class PlayerController {
                 }
                 if (onground) {
                     this.jumps = 2
+                    console.log(this.falling)
+                    if (this.falling > 70) SoundController.playerSound("hitGround")
                     this.falling = 0
-
                     
                 }
                 
@@ -279,6 +280,7 @@ class PlayerController {
                 this.jumps -= 1
                 this.jumpTicker = 0
                 Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -8*this.options.jumpHeight))
+                SoundController.playerSound("jump")
             }
             if (!onground && (keys.w || keys.arrowup) && this.jumpTicker < 20 && this.body.velocity.y < 0) {
                 Matter.Body.setVelocity(this.body, v(this.body.velocity.x, -8*this.options.jumpHeight))
@@ -374,7 +376,7 @@ class PlayerController {
                     )
             }
             if (keys["c"] && !preKeys["c"] && (this.hasGrenade>=1||this.body.id!=player.body.id) && customOptions.grenades && this.alive) {
-                SoundController.playerSound("gun")
+                SoundController.playerSound("grenade")
                 this.hasGrenade = 0
                 var dir = this.direction
                 addGrenade(v(this.body.position.x+(dir*20)+20,this.body.position.y), dir, this)
@@ -418,6 +420,7 @@ class PlayerController {
             if (customOptions.permadeath) {
                 window.close()
             }
+            SoundController.playerSound("death")
             //if (customOptions.permadeath) window.close()
             this.stabilsing = false
             this.options.speed = 0

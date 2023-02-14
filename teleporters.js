@@ -60,6 +60,7 @@ class Teleporter {
                         body.endPoint.position.y+relativePosition.y,
                         )
                     )
+                    SoundController.playerSound("teleport")
                     this.portalTicker[collision.bodyB.id] = 80
                 }
             }
