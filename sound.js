@@ -1,3 +1,13 @@
+/*
+====Sounds====
+gun,
+(shoot)grenade,
+explosion,
+hit,
+hitGround,
+teleport,
+*/
+
 class SoundController {
     static playerSound(soundName) {
         var link = {
@@ -11,7 +21,7 @@ class SoundController {
             explosion: ["explosion.wav"]
         }[soundName]
         var link = link[randInt(0,link.length-1)],
-            audio = new Audio("sfx"+link);
+            audio = new Audio("sfx/"+link);
         audio.play();    
     }
 }
