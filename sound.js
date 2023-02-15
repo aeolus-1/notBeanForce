@@ -31,7 +31,7 @@ class SoundController {
             hit: ["hurt1.wav","hurt2.wav","hurt3.wav","hurt4.wav",],
             bounce: ["bounce1.wav","bounce2.wav","bounce3.wav","bounce4.wav","bounce5.wav","bounce6.wav",],
             hitGround: ["hitGround1.wav","hitGround2.wav","hitGround3.wav","hitGround4.wav","hitGround5.wav",],
-            death: ["death1.wav","death2.wav","death3.wav",],
+            death: ["death1.wav","death2.wav",],
             teleport: ["teleport.wav"],
             join: ["./../join.mp3"],
         },
