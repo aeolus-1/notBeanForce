@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="names.js"></script>
+    <script src="libs/peer.js"></script>
     <title>gane screen</title>
     <style>
         body {
@@ -76,7 +77,9 @@
     <hr>
 
     </div>
+    <div id="joinSection">
     <span style="font-size: x-large;">ID:</span><input style="width:200px" id="idInput" placeholder="e.g. 26473" type="text"><button id="join">Join Game</button>
+</div>
     <script>
         function setInputChange(input) {
             var next = input.nextElementSibling
@@ -146,14 +149,57 @@ var urlInfo = getURLInfo(location.href)
         document.getElementById("join").onclick = function(){
             var id = document.getElementById('idInput').value
             selectedMap = parseInt(id[0])
-                
-            window.open(`./gane.html?join=${id}?userName=${username()}?level=${selectedMap}`,(urlInfo.join!=undefined)?"_self":undefined)
+            if (urlInfo.join==undefined) {
+                window.open(`./index.html?join=${id}`)
+            } else window.open(`./gane.html?join=${id}?userName=${username()}?level=${selectedMap}`,(urlInfo.join!=undefined)?"_self":undefined)
+            
         }
 
         if (urlInfo.join!=undefined) {
-            document.getElementById('idInput').value = urlInfo.join
+            document.getElementById('idInput').value = "getting id..."
             document.getElementById("hostingSection").style.display = "none"
+            document.getElementById("joinSection").children[2].disabled = true
+            document.getElementById("joinSection").children[1].disabled = true
+
+
+            var gettingIdPeer = new Peer(null, {
+                debug:2
+            })
+            
+
+            gettingIdPeer.on("open", function (id) {
+                console.log("opened", id)
+                this.conn = this.connect(urlInfo.join, {
+                    reliable: true,
+                });
+                this.conn.on("open", function () {
+                    console.log("Connected to: " + this.peer);
+                })
+                this.conn.on("data", data=>{
+
+                    console.log("recieved data", data)
+                    document.getElementById('idInput').value = data
+                    document.getElementById("joinSection").children[2].disabled = false
+            document.getElementById("joinSection").children[1].disabled = false
+                    this.conn.close()
+
+                })
+                this.conn.on("close", data=>{
+
+                    console.log("connection destroyed")
+                    
+
+                })
+            })
+            gettingIdPeer.on("connection", function (conn) {
+                console.log("connected", conn)
+                
+      
+                
+            })
         }
     </script>
+
+    
 </body>
 </html>

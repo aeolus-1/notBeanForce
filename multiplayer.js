@@ -371,6 +371,7 @@ function addClientPort() {
   hostConnections.push(newConn);
   newConn.init();
   setNewClient(true)
+  return newConn
 }
 var enemeyPlayers = new Array(),
   enemeyPlayerComp = Matter.Composite.create();
@@ -383,7 +384,10 @@ var hostConnections = [],
   clientConnection = undefined;
 document.body.onload = () => {
   setNewClient(true)
-  if (host) document.getElementById("hostOptionsDiv").style.display = ""
+  if (host) {
+    document.getElementById("hostOptionsDiv").style.display = ""
+    document.getElementById("joinDiv").style.display = ""
+  }
 
   document.getElementById("logDiv").onscroll = ()=>{
     if (resetScrollTimeout != null) clearTimeout(resetScrollTimeout)

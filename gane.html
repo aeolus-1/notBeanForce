@@ -245,14 +245,22 @@ function addBody(bod) {
 <div id="leaderBoardDiv" style="position:absolute;z-index:100;top:0px;right:0px;">
 
 </div>
+
 <div id="logDiv" style="position:absolute;z-index:100;bottom:0px;">
 
 </div>
 <div style="position:absolute;z-index:100;top:0px;">
-  <a href="index.html">⇱ Main Menu</a><br><br>
+  <a href="index.html">⇱ Main Menu</a>
+  <div id="joinDiv" style='display:none;font-size: large; font-family: "Comic Sans MS";'>Join Id: <span id="joinId">Getting...</span>
+  <br><span>[<a href="#" onclick="(function(){
+    navigator.clipboard.writeText(`https://aeolus-1.github.io/notBeanForce?join=${joinId}`);
+    return false;
+})();return false;">Copy Link</a>]</span>
+  </div>
+  <br><br>
   <div style="display: none" id="hostOptionsDiv">
-  <a style="cursor: pointer;" onclick="collapse(this)">[Close]</a>
-  <div style="margin-left: 10px;">
+  Debug <a style="cursor: pointer;" onclick="collapse(this)">[Expand]</a>
+  <div style="display:none; margin-left: 10px;">
     <button id="addClientBut">Add Player</button><br><br><div id="idDiv" ></div>
   </div>
 </div>
@@ -260,6 +268,7 @@ function addBody(bod) {
   
 </div>
 
+<script src="multiplayerOneId.js"></script>
 
 
   </body>
