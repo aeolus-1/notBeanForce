@@ -1,10 +1,12 @@
-var log = [],
-    preLog = []
+var log = [{text:""}],
+    preLog = [{text:""}]
 function renderLog() {
-    if (log[log.length-1] != preLog[log.length-1]) {
-        //console.log("yay",log[log.length-1].text.includes("probably"))
-        soundController.playerSound("join", 1)
+    if (log[log.length-1].text != preLog[preLog.length-1].text) {
+        if (log[log.length-1].text.includes("probably")) {
+            soundController.playerSound("join")
+        }
     }
+    
     /*ctx.translate(camera.x-(render.canvas.width*0.75), camera.y-(render.canvas.height*0.75))
     //ctx.fillRect(0,0, 100, 100)
     for (let i = 0; i < log.length; i++) {

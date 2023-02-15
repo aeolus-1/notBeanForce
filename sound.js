@@ -36,7 +36,8 @@ class SoundController {
                 const ref = array[j];
                 var queue = {
                     pointer:1,
-                    audios:[]
+                    audios:[],
+                    name:ref,
                 }
                 for (let l = 0; l < 10; l++) {
                     queue.audios.push(new Audio("sfx/"+ref))
@@ -51,6 +52,8 @@ class SoundController {
         var audio = queue.audios[queue.pointer]
         audio.volume = volume
         audio.play()
+        
+        console.log(queue.name, audio.volume)
         queue.pointer = stopOverflow(queue.pointer+1, queue.audios.length-1)
         return audio
     }

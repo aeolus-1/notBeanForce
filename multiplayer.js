@@ -188,6 +188,7 @@ class ClientConnection extends Connection {
         ducking:player.isDucking,
         bleeding:player.bleeding,
         username:player.username,
+        stats:player.stats,
       },
       logEvents:logEvents
     });
@@ -206,6 +207,7 @@ class ClientConnection extends Connection {
         ducking:player.isDucking,
         bleeding:player.bleeding,
         username:player.username,
+        stats:player.stats,
       },
       logEvents:logEvents
     });
@@ -287,6 +289,8 @@ function receiveMultiplayerData(data, id) {
       enemeyPlayer.controller.bleeding = data.bleeding
 
       enemeyPlayer.controller.username = data.username
+
+      enemeyPlayer.controller.stats = data.stats
       
 
       if (!data.alive) enemeyPlayer.controller.kill(false);
@@ -351,6 +355,7 @@ function getMultiplayerData() {
         stabilsing:player.stabilsing,
         bleeding:player.bleeding,
         username:player.username,
+        stats:player.stats,
       }
     )
   }
