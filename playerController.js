@@ -356,7 +356,7 @@ class PlayerController {
                 this.shootTicker = 200
                 var dir = this.direction,
                                 pos = v(
-                    this.body.position.x+(dir*100),
+                    this.body.position.x+(dir*23),
                     this.body.position.y
                 )
                 addBullet(

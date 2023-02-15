@@ -32,8 +32,9 @@ function runBullets() {
                     if (bul.bounces > (customOptions.bouncingbullets)?10:0) {
                         Matter.Composite.remove(bulletsComp, bul)
                         bullets.splice(i, 1)
-                        soundController.emitSoundFromPosition("hit", bul.position, player.body.position)
                     }
+                    soundController.emitSoundFromPosition("bounce", bul.position, player.body.position)
+
                     particleController.createSquareExplosion(
                         bul.position,
                         {

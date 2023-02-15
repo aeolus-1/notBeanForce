@@ -13,6 +13,8 @@ jump,
 class SoundController {
     constructor() {
         this.sounds = {
+
+            /*
             jump: ["jump.wav"],
             gun: ["laserShoot.wav", "laserShoot (1).wav", "laserShoot (2).wav", "laserShoot (3).wav", "laserShoot (4).wav", "laserShoot (5).wav", "laserShoot (6).wav"],
             explosion: ["explosion.wav"],
@@ -21,6 +23,17 @@ class SoundController {
             death: ["death.mp3"],
             teleport: ["teleport.wav"],
             join: ["join.mp3"],
+
+            */
+            jump: ["jump1.wav","jump2.wav","jump3.wav","jump4.wav","jump5.wav",],
+            gun: ["shoot1.wav","shoot2.wav","shoot3.wav","shoot4.wav","shoot5.wav","shoot6.wav","shoot7.wav","shoot8.wav","shoot9.wav",],
+            explosion: ["explosion1.wav","explosion2.wav","explosion3.wav","explosion4.wav",],
+            hit: ["hurt1.wav","hurt2.wav","hurt3.wav","hurt4.wav",],
+            bounce: ["bounce1.wav","bounce2.wav","bounce3.wav","bounce4.wav","bounce5.wav","bounce6.wav",],
+            hitGround: ["hitGround1.wav","hitGround2.wav","hitGround3.wav","hitGround4.wav","hitGround5.wav",],
+            death: ["death1.wav","death2.wav","death3.wav",],
+            teleport: ["teleport.wav"],
+            join: ["./../join.mp3"],
         },
         this.audios = {}
         var soundIds = Object.keys(this.sounds)
@@ -35,7 +48,7 @@ class SoundController {
                     name:ref,
                 }
                 for (let l = 0; l < 10; l++) {
-                    queue.audios.push(new Audio("sfx/"+ref))
+                    queue.audios.push(new Audio("sfx/voiceEffects/"+ref))
                 }
                 this.audios[soundIds[i]].push(queue)
             }
