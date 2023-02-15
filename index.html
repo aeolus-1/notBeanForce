@@ -122,6 +122,9 @@
   return returnOb
 }
 var urlInfo = getURLInfo(location.href)
+document.getElementById("nameInput").value = names[Math.floor(Math.random()*names.length)].split(",")[0]
+
+if (urlInfo.username!=undefined) document.getElementById("nameInput").value = urlInfo.username
 
         var selectedMap = 1
         function selectMap(num) {
@@ -133,7 +136,6 @@ var urlInfo = getURLInfo(location.href)
         function select2() {selectMap(2)}
         function select3() {selectMap(3)}
 
-        document.getElementById("nameInput").value = names[Math.floor(Math.random()*names.length)].split(",")[0]
         function username() {return document.getElementById("nameInput").value}
         localStorage.setItem("customOptions", null)
         document.getElementById("host").onclick = function(){
@@ -150,7 +152,7 @@ var urlInfo = getURLInfo(location.href)
             var id = document.getElementById('idInput').value
             selectedMap = parseInt(id[0])
             if (urlInfo.join==undefined) {
-                window.open(`./index.html?join=${id}`)
+                window.open(`./index.html?join=${id}?username=${username()}`)
             } else window.open(`./gane.html?join=${id}?userName=${username()}?level=${selectedMap}`,(urlInfo.join!=undefined)?"_self":undefined)
             
         }
