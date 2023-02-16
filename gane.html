@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <title>drawer</title>
     <script src="libs/peer.js"></script>
     <script src="libs/matter.js"></script>
@@ -29,6 +29,15 @@
         max-height: 300px;
         overflow: scroll;
       }
+      #logDivInput {
+        font-family: "Comic Sans MS";
+        font-size: 25px;
+        margin: 7px;
+        width: 550px;
+
+        background-color: rgba(50, 50, 50, 0.2);
+        border: none;
+      }
       #leaderBoardDiv {
         font-family: "Comic Sans MS";
         font-size: 20px;
@@ -39,143 +48,194 @@
       .textblock {
         max-height: 64px;
         max-width: 700px;
-        width:550px;
+        width: 550px;
         overflow: scroll;
         opacity: 70%;
       }
-     
-      
     </style>
   </head>
   <body>
     <script>
-      
-
       function getURLInfo(string) {
-  var info = string.split("?"),
-    returnOb = {}
-  for (let i = 1; i < info.length; i++) {
-    const text = info[i];
-    returnOb[text.split("=")[0]] = text.split("=")[1]
-  }
-  return returnOb
-}
-var urlInfo = getURLInfo(location.href)
-
+        var info = string.split("?"),
+          returnOb = {};
+        for (let i = 1; i < info.length; i++) {
+          const text = info[i];
+          returnOb[text.split("=")[0]] = text.split("=")[1];
+        }
+        return returnOb;
+      }
+      var urlInfo = getURLInfo(location.href);
     </script>
     <script src="matterInit.js"></script>
     <script src="textParser.js"></script>
     <script src="sightClipping.js"></script>
-    <img src="m16.png" style="display: none" id="gun">
+    <img src="m16.png" style="display: none" id="gun" />
     <script>
-      var options = localStorage.getItem("customOptions")
-      dummylog(options)
-      if (options != "null"&&options!=null) runOptions(JSON.parse(options))
-      
+      var options = localStorage.getItem("customOptions");
+      dummylog(options);
+      if (options != "null" && options != null) runOptions(JSON.parse(options));
 
-window.addEventListener('resize', function(event) {
-    render.canvas.width = window.innerWidth
-    render.canvas.height = window.innerHeight
-}, true);
-function collapse(e) {
-  
-    e.classList.toggle("active");
-    var content = e.nextElementSibling;
-    if (content.style.display === "" || content.style.display === "block") {
-      content.style.display = "none";
-      e.textContent = "[Expand]"
-    } else {
-      content.style.display = "block";
-      e.textContent = "[Close]"
-      
-    }
-  }
-      var spawnPoints = [
-        [v(855.8181670104865,1522.0270814533455),v(2247.554572466912,940.9677959175898),v(967.6447812937414,367.2323634734135),v(2307.4936882779007,349.29906655323293),v(3478.786842405824,343.7395804083279),v(3472.383292059527,1143.6681164373022),v(2347.5319305552416,1542.0470304068654),v(2704.750694938356,1990.8464481503904)],
-        [v(2484.485616757734,603.9030341431072),v(1845.7061920420656,313.29976252721843),v(1235.236416364406,1033.2064039180718),v(366.54223431619073,262.8761330125663)],
-        [v(296.24461233931805,1155.0343125273432),v(1794.9371795220568,839.3247980343544),v(3679.982835897538,1142.249762701258),v(3097.2258973238454,1999.3081861625435),v(2861.7132122041953,404.2997526822417),v(1532.613660230291,-44.78274304385008),v(364.6331487155431,230.00975931636927),v(1419.8396774540356,2301.1765535604827)],
-      ][levelSelection-1]
-var enemeyPreKeys = {}
-    setInterval(() => {
-      if (keys["enter"]&&!player.alive) {
-        respawn()
+      window.addEventListener(
+        "resize",
+        function (event) {
+          render.canvas.width = window.innerWidth;
+          render.canvas.height = window.innerHeight;
+        },
+        true
+      );
+      function collapse(e) {
+        e.classList.toggle("active");
+        var content = e.nextElementSibling;
+        if (content.style.display === "" || content.style.display === "block") {
+          content.style.display = "none";
+          e.textContent = "[Expand]";
+        } else {
+          content.style.display = "block";
+          e.textContent = "[Close]";
+        }
       }
-        player.update(keys, prekeys)
+      var spawnPoints = [
+        [
+          v(855.8181670104865, 1522.0270814533455),
+          v(2247.554572466912, 940.9677959175898),
+          v(967.6447812937414, 367.2323634734135),
+          v(2307.4936882779007, 349.29906655323293),
+          v(3478.786842405824, 343.7395804083279),
+          v(3472.383292059527, 1143.6681164373022),
+          v(2347.5319305552416, 1542.0470304068654),
+          v(2704.750694938356, 1990.8464481503904),
+        ],
+        [
+          v(2484.485616757734, 603.9030341431072),
+          v(1845.7061920420656, 313.29976252721843),
+          v(1235.236416364406, 1033.2064039180718),
+          v(366.54223431619073, 262.8761330125663),
+        ],
+        [
+          v(296.24461233931805, 1155.0343125273432),
+          v(1794.9371795220568, 839.3247980343544),
+          v(3679.982835897538, 1142.249762701258),
+          v(3097.2258973238454, 1999.3081861625435),
+          v(2861.7132122041953, 404.2997526822417),
+          v(1532.613660230291, -44.78274304385008),
+          v(364.6331487155431, 230.00975931636927),
+          v(1419.8396774540356, 2301.1765535604827),
+        ],
+      ][levelSelection - 1];
+      var enemeyPreKeys = {};
+      setInterval(() => {
+        if (keys["enter"] && !prekeys["enter"]) {
+          if (document.activeElement === document.getElementById("logDivInput")) {
+            pushMsg(`[${player.username}] ${document.getElementById("logDivInput").value}`)
+            document.getElementById("logDivInput").value = ""
+          } else if (!player.alive) {
+            respawn();
+
+          }
+
+        }
         
+        
+        
+        if (keys["t"]) {
+          document.getElementById("logDivInput").focus()
+          //document.getElementById("logDivInput").blur()
+          
+        }
+        if (keys["escape"]) {
+          render.canvas.focus()
+          focus(render.canvas)
+          document.getElementById("logDivInput").disabled = true
+          setTimeout(() => {
+            document.getElementById("logDivInput").disabled = false
+          }, 20);
+        }
+        player.update(keys, prekeys);
+
         for (let i = 0; i < enemeyPlayers.length; i++) {
           const enemyPlayer = enemeyPlayers[i];
-          enemyPlayer.update()
-          console.log(runSightClip(player.body.position, enemyPlayer))
-          enemyPlayer.targetOpacity = (!runSightClip(player.body.position, enemyPlayer))?1:0
+          enemyPlayer.update();
+          console.log(runSightClip(player.body.position, enemyPlayer));
+          enemyPlayer.targetOpacity = !runSightClip(
+            player.body.position,
+            enemyPlayer
+          )
+            ? 1
+            : 0;
 
-          var inactiveFor = (new Date()).getTime()-enemyPlayer.afkTicker
+          var inactiveFor = new Date().getTime() - enemyPlayer.afkTicker;
           if (inactiveFor > 5000) {
-            Matter.Composite.remove(engine.world, enemyPlayer.body)
-            enemeyPlayers.splice(i, 1)
-            console.log("kicked",enemyPlayer.portId)
+            Matter.Composite.remove(engine.world, enemyPlayer.body);
+            enemeyPlayers.splice(i, 1);
+            console.log("kicked", enemyPlayer.portId);
             for (let i = 0; i < hostConnections.length; i++) {
               const conn = hostConnections[i];
               if (conn.lastPeerId == enemyPlayer.portId) {
-                conn.conn.close()
-                setPortDivContent(enemyPlayer.portId, "Disconnected")
-                console.log("closing port")
-                if (host) pushMsg(`<span style='color:lightred;'><b>${enemyPlayer.username}</b> has disconnected</span>`)
+                conn.conn.close();
+                setPortDivContent(enemyPlayer.portId, "Disconnected");
+                console.log("closing port");
+                if (host)
+                  pushMsg(
+                    `<span style='color:lightred;'><b>${enemyPlayer.username}</b> has disconnected</span>`
+                  );
               }
             }
           }
         }
-        
-        player.bleeding = player.stats.health <= 0.4
-        
-        updateClients()
-        if (window.clientConnection!=undefined) if (joining!=undefined) {
-          dummylog(window.clientConnection.conn._open)
-          window.clientConnection.updateHost()
-          logEvents = []
-        }
-        var offScreenRange = 500
+
+        player.bleeding = player.stats.health <= 0.4;
+
+        updateClients();
+        if (window.clientConnection != undefined)
+          if (joining != undefined) {
+            dummylog(window.clientConnection.conn._open);
+            window.clientConnection.updateHost();
+            logEvents = [];
+          }
+        var offScreenRange = 500;
         if (
-          player.body.position.y > cameraBounds.max.y+offScreenRange ||
-          player.body.position.x > cameraBounds.max.x+offScreenRange ||
-          player.body.position.y < cameraBounds.min.y-offScreenRange ||
-          player.body.position.x < cameraBounds.min.x-offScreenRange
+          player.body.position.y > cameraBounds.max.y + offScreenRange ||
+          player.body.position.x > cameraBounds.max.x + offScreenRange ||
+          player.body.position.y < cameraBounds.min.y - offScreenRange ||
+          player.body.position.x < cameraBounds.min.x - offScreenRange
         ) {
-          respawn()
+          respawn();
         }
         if (player.alive) {
-          player.displayRespawnMessage = false
-          player.hasGrenade = clamp(player.hasGrenade+0.00066, 0, 1)
+          player.displayRespawnMessage = false;
+          player.hasGrenade = clamp(player.hasGrenade + 0.00066, 0, 1);
         }
 
-        telepoter.update()
-        telepoter2.update()
-        
-        enemeyPreKeys = {...window.enemeyKeys}
-        Engine.update(engine, Math.min((new Date()).getTime()-preTimeDelta, 50))
-        timeDelta = Math.min((new Date()).getTime()-preTimeDelta, 50)
-        particleController.runParticles()
-        preTimeDelta = (new Date()).getTime()
-        runBullets()
-        runGrenades()
-        prekeys = {...keys}
+        telepoter.update();
+        telepoter2.update();
 
-    }, 1000/60);
+        enemeyPreKeys = { ...window.enemeyKeys };
+        Engine.update(
+          engine,
+          Math.min(new Date().getTime() - preTimeDelta, 50)
+        );
+        timeDelta = Math.min(new Date().getTime() - preTimeDelta, 50);
+        particleController.runParticles();
+        preTimeDelta = new Date().getTime();
+        runBullets();
+        runGrenades();
+        prekeys = { ...keys };
+      }, 1000 / 60);
 
-function addBody(bod) {
-            Matter.Composite.add(engine.world, bod)
-            return bod
-        }
+      function addBody(bod) {
+        Matter.Composite.add(engine.world, bod);
+        return bod;
+      }
 
-        
-        var keys = {shift:false},
-            prekeys = {shift:false}
-        document.addEventListener("keydown", (e)=>{
-            keys[e.key.toLowerCase()] = true
-        })
-        document.addEventListener("keyup", (e)=>{
-            keys[e.key.toLowerCase()] = false
-        })
-        
+      var keys = { shift: false },
+        prekeys = { shift: false };
+      document.addEventListener("keydown", (e) => {
+        keys[e.key.toLowerCase()] = true;
+      });
+      document.addEventListener("keyup", (e) => {
+        keys[e.key.toLowerCase()] = false;
+      });
     </script>
     <script src="camera.js"></script>
     <script src="log.js"></script>
@@ -189,88 +249,98 @@ function addBody(bod) {
     <script src="particles.js"></script>
     <script src="multiplayer.js"></script>
 
-<script>
-    const particleController = new ParticleController(engine)
-    var player = new PlayerController(engine,player,{
-        body:{
-            scale:15,
-            density:0.01,
+    <script>
+      const particleController = new ParticleController(engine);
+      var player = new PlayerController(engine, player, {
+        body: {
+          scale: 15,
+          density: 0.01,
         },
 
-        speed:0.6,
+        speed: 0.6,
 
-        keys:keys,
-        preKeys:prekeys,
-        username:username,
-    })
-    var telepoter = {update:()=>{}},
-        telepoter2 = {update:()=>{}};
+        keys: keys,
+        preKeys: prekeys,
+        username: username,
+      });
+      var telepoter = { update: () => {} },
+        telepoter2 = { update: () => {} };
 
-    ([
-      ()=>{
-        telepoter = new Teleporter(v(300,100), v(3700,1471))
-        telepoter2 = new Teleporter(v(2914,2300), v(2298,-200))
-      },
-      ()=>{
-        telepoter = new Teleporter(v(1371,1533), v(300,100))
+      [
+        () => {
+          telepoter = new Teleporter(v(300, 100), v(3700, 1471));
+          telepoter2 = new Teleporter(v(2914, 2300), v(2298, -200));
+        },
+        () => {
+          telepoter = new Teleporter(v(1371, 1533), v(300, 100));
+        },
+        () => {
+          telepoter = new Teleporter(v(3996, 2162), v(450, 30));
+        },
+      ][levelSelection - 1]();
 
-      },
-      ()=>{
-        telepoter = new Teleporter(v(3996,2162), v(450,30))
+      Matter.Composite.allBodies(engine.world).forEach((b) => {
+        if (b.platform) {
+          b.collisionFilter.group = 45678903;
+          b.render.fillStyle = "#eee";
+        }
+      });
 
+      function respawn() {
+        player.options.speed = 0.6;
+        player.options.jumpHeight = 1;
+        player.alive = true;
+        player.stats.health = 1;
+        player.shield = 2500;
+        player.stabilsing = true;
+        var point = { ...spawnPoints[randInt(0, spawnPoints.length - 1)] };
+        player.displayRespawnMessage = false;
+        Matter.Body.setPosition(player.body, point);
+        Matter.Body.setVelocity(player.body, v());
+        pushMsg(
+          `<span style="color:red;"><b>${player.username}</b> self destructed</span>`
+        );
+        if (customOptions.permadeath) {
+          window.close();
+        }
       }
-    ][levelSelection-1]())
-     
+    </script>
+    <div
+      id="leaderBoardDiv"
+      style="position: absolute; z-index: 100; top: 0px; right: 0px"
+    ></div>
+    <div style="position: absolute; z-index: 100; bottom: 0px">
+      <div id="logDiv"></div>
+      <input id="logDivInput" placeholder='press "t" to type' type="text" />
+    </div>
 
-    Matter.Composite.allBodies(engine.world).forEach(b=>{if(b.platform){b.collisionFilter.group = 45678903;b.render.fillStyle = "#eee"}})
-    
-
-    function respawn() {
-      player.options.speed = 0.6
-      player.options.jumpHeight = 1
-      player.alive = true
-      player.stats.health = 1
-      player.shield = 2500
-      player.stabilsing = true
-      var point = {...spawnPoints[randInt(0,spawnPoints.length-1)]}
-      player.displayRespawnMessage = false
-      Matter.Body.setPosition(player.body,point)
-      Matter.Body.setVelocity(player.body,v())
-      pushMsg(`<span style="color:red;"><b>${player.username}</b> self destructed</span>`)
-      if (customOptions.permadeath) {
-        window.close()
-      }
-    }
-    
-</script>
-<div id="leaderBoardDiv" style="position:absolute;z-index:100;top:0px;right:0px;">
-
-</div>
-
-<div id="logDiv" style="position:absolute;z-index:100;bottom:0px;">
-
-</div>
-<div style="position:absolute;z-index:100;top:0px;">
-  <a href="index.html">⇱ Main Menu</a>
-  <div id="joinDiv" style='display:none;font-size: large; font-family: "Comic Sans MS";'>Join Id: <span id="joinId">Getting...</span>
-  <br><span>[<a href="#" onclick="(function(){
+    <div style="position: absolute; z-index: 100; top: 0px">
+      <a href="index.html">⇱ Main Menu</a>
+      <div
+        id="joinDiv"
+        style="display: none; font-size: large; font-family: 'Comic Sans MS'"
+      >
+        Join Id: <span id="joinId">Getting...</span> <br /><span
+          >[<a
+            href="#"
+            onclick="(function(){
     navigator.clipboard.writeText(`https://aeolus-1.github.io/notBeanForce?join=${joinId}`);
     return false;
-})();return false;">Copy Link</a>]</span>
-  </div>
-  <br><br>
-  <div style="display: none" id="hostOptionsDiv">
-  Debug <a style="cursor: pointer;" onclick="collapse(this)">[Expand]</a>
-  <div style="display:none; margin-left: 10px;">
-    <button id="addClientBut">Add Player</button><br><br><div id="idDiv" ></div>
-  </div>
-</div>
+})();return false;"
+            >Copy Link</a
+          >]</span
+        >
+      </div>
+      <br /><br />
+      <div style="display: none" id="hostOptionsDiv">
+        Debug <a style="cursor: pointer" onclick="collapse(this)">[Expand]</a>
+        <div style="display: none; margin-left: 10px">
+          <button id="addClientBut">Add Player</button><br /><br />
+          <div id="idDiv"></div>
+        </div>
+      </div>
+    </div>
 
-  
-</div>
-
-<script src="multiplayerOneId.js"></script>
-
-
+    <script src="multiplayerOneId.js"></script>
   </body>
 </html>

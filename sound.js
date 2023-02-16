@@ -33,7 +33,7 @@ class SoundController {
         
     }
     evalAudioElements() {
-        if (userIp != '203.100.5.91') {
+        if (userIp == '203.100.5.91') {
             this.sounds = {
 
                 
@@ -49,6 +49,22 @@ class SoundController {
             join: ["./../join.mp3"],
             explosion: ["explosion1.wav","explosion2.wav","explosion3.wav","explosion4.wav",],
     
+            }
+        } else {
+            this.sounds = {
+
+            
+                jump: ["jump.wav"],
+                gun: ["laserShoot.wav", "laserShoot (1).wav", "laserShoot (2).wav", "laserShoot (3).wav", "laserShoot (4).wav", "laserShoot (5).wav", "laserShoot (6).wav"],
+                explosion: ["explosion.wav"],
+                hit: ["hit (1).wav","hit (2).wav","hit (3).wav",],
+                hitGround: ["hitGround.wav"],
+                death: ["death.mp3"],
+                teleport: ["teleport.wav"],
+                join: ["join.mp3"],
+    
+                
+                
             }
         }
         this.audios = {}
@@ -75,6 +91,7 @@ class SoundController {
     playSound(queue, volume) {
         var audio = queue.audios[queue.pointer]
         audio.volume = volume
+        console.log(audio.src)
         audio.play()
         
         console.log(queue.name, audio.volume)

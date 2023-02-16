@@ -400,8 +400,24 @@ document.body.onload = () => {
   setTimeout(() => {
     if (host) {
       player.name = "host"
-      setNewClient(false)
-      pushMsg("Host server ready")
+
+      if (window.online) {
+        setNewClient(false)
+        pushMsg("Host server ready")
+      } else {
+        console.log("offline")
+
+        var reconnect = setInterval(() => {
+          console.log("attempting reconnect")
+          if (window.online) {
+            player.name = "host"
+            setNewClient(false)
+            pushMsg("Host server ready")
+            clearInterval(reconnect)
+          }
+        }, 3000);
+      }
+      
 
     } else if (joining) {
       clientConnection = new ClientConnection(joining, true);

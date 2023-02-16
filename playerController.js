@@ -282,6 +282,7 @@ class PlayerController {
                 }
                 
                 this.preOnground = onground
+            if (!(document.activeElement === document.getElementById("logDivInput"))) {
             if (((keys.w && !preKeys.w)||(keys.arrowup && !preKeys.arrowup)) && this.jumps > 0) {
                 this.jumps -= 1
                 this.jumpTicker = 0
@@ -391,6 +392,7 @@ class PlayerController {
                 var dir = this.direction
                 addGrenade(v(this.body.position.x+(dir*40)+20,this.body.position.y), dir, this)
             }
+        }
             
             
         
