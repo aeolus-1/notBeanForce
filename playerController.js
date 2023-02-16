@@ -389,7 +389,7 @@ class PlayerController {
                 this.emitSound("grenade")
                 this.hasGrenade = 0
                 var dir = this.direction
-                addGrenade(v(this.body.position.x+(dir*20)+20,this.body.position.y), dir, this)
+                addGrenade(v(this.body.position.x+(dir*40)+20,this.body.position.y), dir, this)
             }
             
             

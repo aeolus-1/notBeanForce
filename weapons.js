@@ -234,7 +234,7 @@ function explodeGrenade(gren) {
         }, randInt(0, 50));
         
     }
-    soundController.emitSoundFromPosition("explosion", gren.position, player)
+    soundController.emitSoundFromPosition("explosion", gren.position, player.body.position)
         
     
 }

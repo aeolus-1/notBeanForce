@@ -47,6 +47,7 @@ class SoundController {
             death: ["death1.wav","death2.wav",],
             teleport: ["teleport.wav"],
             join: ["./../join.mp3"],
+            explosion: ["explosion1.wav","explosion2.wav","explosion3.wav","explosion4.wav",],
     
             }
         }
