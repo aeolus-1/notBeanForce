@@ -14,6 +14,15 @@ Matter.Detector.canCollide = function (filterA, filterB) {
         ) || filterA.group == 0);*/
 }
 
+var userIp;
+
+  $.getJSON("https://api.ipify.org?format=json", function(data) {
+         
+    // Setting text of element P with id gfg
+    userIp = data.ip
+    soundController.evalAudioElements()
+})
+
 function dummylog(){}
 var Engine = Matter.Engine,
   Render = Matter.Render,

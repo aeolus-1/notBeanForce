@@ -14,7 +14,7 @@ class SoundController {
     constructor() {
         this.sounds = {
 
-            /*
+            
             jump: ["jump.wav"],
             gun: ["laserShoot.wav", "laserShoot (1).wav", "laserShoot (2).wav", "laserShoot (3).wav", "laserShoot (4).wav", "laserShoot (5).wav", "laserShoot (6).wav"],
             explosion: ["explosion.wav"],
@@ -24,8 +24,21 @@ class SoundController {
             teleport: ["teleport.wav"],
             join: ["join.mp3"],
 
-            */
-            jump: ["jump1.wav","jump2.wav","jump3.wav","jump4.wav","jump5.wav",],
+            
+            
+        }
+        this.audios = {}
+        this.evalAudioElements()
+        
+        
+    }
+    evalAudioElements() {
+        if (userIp != '203.100.5.91') {
+            this.sounds = {
+
+                
+                
+                jump: ["jump1.wav","jump2.wav","jump3.wav","jump4.wav","jump5.wav",],
             gun: ["shoot1.wav","shoot2.wav","shoot3.wav","shoot4.wav","shoot5.wav","shoot6.wav","shoot7.wav","shoot8.wav","shoot9.wav",],
             explosion: ["explosion1.wav","explosion2.wav","explosion3.wav","explosion4.wav",],
             hit: ["hurt1.wav","hurt2.wav","hurt3.wav","hurt4.wav",],
@@ -34,9 +47,12 @@ class SoundController {
             death: ["death1.wav","death2.wav",],
             teleport: ["teleport.wav"],
             join: ["./../join.mp3"],
-        },
+    
+            }
+        }
         this.audios = {}
         var soundIds = Object.keys(this.sounds)
+        console.log(userIp)
         for (let i = 0; i < soundIds.length; i++) {
             const array = this.sounds[soundIds[i]]
             this.audios[soundIds[i]] = []
@@ -48,13 +64,12 @@ class SoundController {
                     name:ref,
                 }
                 for (let l = 0; l < 10; l++) {
-                    queue.audios.push(new Audio("sfx/voiceEffects/"+ref))
+                    queue.audios.push(new Audio("sfx/"+(userIp == '203.100.5.91'?"voiceEffects/":"")+ref))
                 }
                 this.audios[soundIds[i]].push(queue)
             }
             
         }
-        
     }
     playSound(queue, volume) {
         var audio = queue.audios[queue.pointer]
