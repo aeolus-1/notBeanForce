@@ -243,7 +243,7 @@ class PlayerController {
             
     
                 //log(onground)
-                if (onground && !this.preOnground) {
+                if (onground && !this.preOnground && groundCollide[0]!=undefined) {
                     if (
                         this.body.velocity.y*100>1.9&&
                         this.body.velocity.y*100<5&&
